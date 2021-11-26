@@ -18,24 +18,39 @@ export class AppHome {
         <ion-content scrollY={false}>
           <ion-grid>
             <ion-row>
-              <ion-col size="3">
-                <ion-card>
-                  <ion-toolbar color="secondary">
-                    <ion-title>Files</ion-title>
-                    <ion-buttons slot="end">
-                      <ion-button title="Create file">
-                        <ion-icon slot="icon-only" name="add"></ion-icon>
-                      </ion-button>
-                    </ion-buttons>
-                  </ion-toolbar>
-                  <ion-card-content>
-                    <ion-list>
-                      <app-tree-view />
-                    </ion-list>
-                  </ion-card-content>
-                </ion-card>
+              <ion-col size="3" style={{ padding: '0' }}>
+                <ion-row style={{ padding: '0' }}>
+                  <ion-col size="12" style={{ height: '50%' }}>
+                    <ion-card>
+                      <ion-toolbar color="secondary">
+                        <ion-title>Files</ion-title>
+                        <ion-buttons slot="end">
+                          <ion-button title="Create file">
+                            <ion-icon slot="icon-only" name="add"></ion-icon>
+                          </ion-button>
+                        </ion-buttons>
+                      </ion-toolbar>
+                      <ion-card-content>
+                        <ion-list>
+                          <app-tree-view />
+                        </ion-list>
+                      </ion-card-content>
+                    </ion-card>
+                  </ion-col>
+                  <ion-col size="12" style={{ height: '50%' }}>
+                    <ion-card>
+                      <ion-toolbar color="secondary">
+                        <ion-segment scrollable>
+                          <ion-segment-button>Variables</ion-segment-button>
+                          <ion-segment-button>Charts</ion-segment-button>
+                        </ion-segment>
+                      </ion-toolbar>
+                      <ion-card-content>content</ion-card-content>
+                    </ion-card>
+                  </ion-col>
+                </ion-row>
               </ion-col>
-              <ion-col size="6">
+              <ion-col size="9">
                 <ion-card>
                   <ion-toolbar color="secondary">
                     <ion-title>No File Selected</ion-title>
@@ -53,26 +68,6 @@ export class AppHome {
                   </ion-toolbar>
                   <ion-card-content>content</ion-card-content>
                 </ion-card>
-              </ion-col>
-              <ion-col size="3" style={{ padding: '0' }}>
-                <ion-row style={{ padding: '0' }}>
-                  <ion-col size="12" style={{ height: '50%' }}>
-                    <ion-card>
-                      <ion-card-header color="secondary">
-                        <ion-card-title>Variables</ion-card-title>
-                      </ion-card-header>
-                      <ion-card-content>content</ion-card-content>
-                    </ion-card>
-                  </ion-col>
-                  <ion-col size="12" style={{ height: '50%' }}>
-                    <ion-card>
-                      <ion-card-header color="secondary">
-                        <ion-card-title>Charts</ion-card-title>
-                      </ion-card-header>
-                      <ion-card-content>content</ion-card-content>
-                    </ion-card>
-                  </ion-col>
-                </ion-row>
               </ion-col>
             </ion-row>
           </ion-grid>
