@@ -5,10 +5,14 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { TreeNode } from "./components/app-tree-view/app-tree-view";
 export namespace Components {
     interface AppHome {
     }
     interface AppRoot {
+    }
+    interface AppTreeView {
+        "data": TreeNode;
     }
 }
 declare global {
@@ -24,9 +28,16 @@ declare global {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
     };
+    interface HTMLAppTreeViewElement extends Components.AppTreeView, HTMLStencilElement {
+    }
+    var HTMLAppTreeViewElement: {
+        prototype: HTMLAppTreeViewElement;
+        new (): HTMLAppTreeViewElement;
+    };
     interface HTMLElementTagNameMap {
         "app-home": HTMLAppHomeElement;
         "app-root": HTMLAppRootElement;
+        "app-tree-view": HTMLAppTreeViewElement;
     }
 }
 declare namespace LocalJSX {
@@ -34,9 +45,13 @@ declare namespace LocalJSX {
     }
     interface AppRoot {
     }
+    interface AppTreeView {
+        "data"?: TreeNode;
+    }
     interface IntrinsicElements {
         "app-home": AppHome;
         "app-root": AppRoot;
+        "app-tree-view": AppTreeView;
     }
 }
 export { LocalJSX as JSX };
@@ -45,6 +60,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "app-tree-view": LocalJSX.AppTreeView & JSXBase.HTMLAttributes<HTMLAppTreeViewElement>;
         }
     }
 }

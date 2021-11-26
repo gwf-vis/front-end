@@ -29,16 +29,8 @@ export class AppHome {
                     </ion-buttons>
                   </ion-toolbar>
                   <ion-card-content>
-                    <ion-text>Below should be a tree view</ion-text>
                     <ion-list>
-                      {
-                        [1, 2, 3, 4, 5].map(i => (
-                          <ion-item button>
-                            <ion-icon name="document" slot="start"></ion-icon>
-                            {`${i}.sth`}
-                          </ion-item>
-                        ))
-                      }
+                      <app-tree-view />
                     </ion-list>
                   </ion-card-content>
                 </ion-card>
