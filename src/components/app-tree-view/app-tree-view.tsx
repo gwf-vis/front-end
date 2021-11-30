@@ -1,8 +1,9 @@
-import { Component, Host, h, ComponentInterface, Element, Prop } from '@stencil/core';
+import { Component, Host, h, ComponentInterface, Element, Prop, Event, EventEmitter } from '@stencil/core';
 
 export interface TreeNode {
   name: string;
   children?: TreeNode[];
+  [x: string]: any;
 }
 
 @Component({
@@ -48,6 +49,8 @@ export class AppTreeView implements ComponentInterface {
     ]
   };
 
+  @Event() itemClicked: EventEmitter<TreeNode>;
+
   render() {
     return (
       <Host>
@@ -70,7 +73,7 @@ export class AppTreeView implements ComponentInterface {
                 }}>{childNode.name}</span>
                 {this.renderTreeNode(childNode)}
               </li> :
-              <li>{childNode.name}</li>
+              <li onClick={() => this.itemClicked.emit(childNode)}>{childNode.name}</li>
           )
         }
       </ul>

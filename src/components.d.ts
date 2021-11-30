@@ -47,6 +47,7 @@ declare namespace LocalJSX {
     }
     interface AppTreeView {
         "data"?: TreeNode;
+        "onItemClicked"?: (event: CustomEvent<TreeNode>) => void;
     }
     interface IntrinsicElements {
         "app-home": AppHome;

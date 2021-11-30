@@ -1,12 +1,22 @@
-import { Component, h, Host } from '@stencil/core';
+import { Component, ComponentInterface, h, Host, State } from '@stencil/core';
 import '@seanwong24/s-monaco-editor';
+import { TreeNode } from '../app-tree-view/app-tree-view';
 
 @Component({
   tag: 'app-home',
   styleUrl: 'app-home.css',
   scoped: true,
 })
-export class AppHome {
+export class AppHome implements ComponentInterface {
+
+  private monacoEditorElement: HTMLSMonacoEditorElement;
+
+  @State() fileTree: TreeNode;
+
+  async componentDidLoad() {
+    await this.fetchFileTree();
+  }
+
   render() {
     return (
       <Host>
@@ -29,11 +39,25 @@ export class AppHome {
                           <ion-button title="Create file">
                             <ion-icon slot="icon-only" name="add"></ion-icon>
                           </ion-button>
+                          <ion-button title="Refresh" onClick={() => this.fetchFileTree()}>
+                            <ion-icon slot="icon-only" name="refresh"></ion-icon>
+                          </ion-button>
                         </ion-buttons>
                       </ion-toolbar>
                       <ion-card-content>
                         <ion-list>
-                          <app-tree-view />
+                          <app-tree-view
+                            data={this.fileTree}
+                            onItemClicked={async ({ detail }) => {
+                              const rootPath = `${this.fileTree.name}/`;
+                              const path = detail.path?.slice(rootPath.length);
+                              const fileContent = await this.fetchFileContent(path);
+                              if (this.monacoEditorElement) {
+                                this.monacoEditorElement.value = fileContent;
+                                // TODO detect language
+                                this.monacoEditorElement.language = 'python';
+                              }
+                            }} />
                         </ion-list>
                       </ion-card-content>
                     </ion-card>
@@ -69,7 +93,7 @@ export class AppHome {
                   </ion-toolbar>
                   {/* TODO considering using flex or resize observer for the height */}
                   <ion-card-content style={{ height: 'calc(100% - 56px)' }} >
-                    <s-monaco-editor />
+                    <s-monaco-editor ref={(el: HTMLSMonacoEditorElement) => this.monacoEditorElement = el} />
                   </ion-card-content>
                 </ion-card>
               </ion-col>
@@ -79,4 +103,19 @@ export class AppHome {
       </Host>
     );
   }
+
+  private async fetchFileTree() {
+    const response = await fetch('http://localhost:5000/file/tree');
+    const fileTree = await response.json();
+    this.fileTree = fileTree;
+  }
+
+  private async fetchFileContent(path: string) {
+    const searchParams = new URLSearchParams({ path });
+    const searchParamsString = searchParams.toString();
+    const response = await fetch(`http://localhost:5000/file?${searchParamsString}`);
+    const text = await response.text();
+    return text;
+  }
+
 }
