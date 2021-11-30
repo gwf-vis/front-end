@@ -1,4 +1,5 @@
 import { Component, h, Host } from '@stencil/core';
+import '@seanwong24/s-monaco-editor';
 
 @Component({
   tag: 'app-home',
@@ -66,7 +67,10 @@ export class AppHome {
                       </ion-button>
                     </ion-buttons>
                   </ion-toolbar>
-                  <ion-card-content>content</ion-card-content>
+                  {/* TODO considering using flex or resize observer for the height */}
+                  <ion-card-content style={{ height: 'calc(100% - 56px)' }} >
+                    <s-monaco-editor />
+                  </ion-card-content>
                 </ion-card>
               </ion-col>
             </ion-row>
