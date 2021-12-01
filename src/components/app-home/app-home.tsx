@@ -1,6 +1,12 @@
 import { Component, ComponentInterface, h, Host, State } from '@stencil/core';
 import '@seanwong24/s-monaco-editor';
 import { TreeNode } from '../app-tree-view/app-tree-view';
+import { popoverController } from '@ionic/core';
+
+export interface User {
+  username: string;
+  role: string;
+}
 
 @Component({
   tag: 'app-home',
@@ -12,9 +18,11 @@ export class AppHome implements ComponentInterface {
   private monacoEditorElement: HTMLSMonacoEditorElement;
 
   @State() fileTree: TreeNode;
+  @State() user: User;
 
   async componentDidLoad() {
     await this.fetchFileTree();
+    await this.fetchUser();
   }
 
   render() {
@@ -23,6 +31,34 @@ export class AppHome implements ComponentInterface {
         <ion-header>
           <ion-toolbar color="primary">
             <ion-title>Advanced Vis</ion-title>
+            <ion-text slot="end">{this.user?.username || 'Guest'}</ion-text>
+            <ion-buttons slot="end">
+              <ion-button
+                title={this.user ? 'Sign out' : 'Sign in'}
+                onClick={async () => {
+                  if (this.user) {
+                    await fetch(
+                      'http://localhost:5000/auth/sign-out',
+                      {
+                        method: 'POST',
+                        credentials: 'include'
+                      }
+                    );
+                    this.fetchUser();
+                  } else {
+                    const popover = await popoverController.create({
+                      component: 'app-sign-in',
+                      translucent: true,
+                      id: 'sign-in'
+                    });
+                    popover.addEventListener('ionPopoverDidDismiss', () => this.fetchUser());
+                    await popover.present();
+                  }
+                }}
+              >
+                <ion-icon name={this.user ? 'log-out' : 'log-in'} slot="icon-only" />
+              </ion-button>
+            </ion-buttons>
           </ion-toolbar>
         </ion-header>
 
@@ -105,7 +141,10 @@ export class AppHome implements ComponentInterface {
   }
 
   private async fetchFileTree() {
-    const response = await fetch('http://localhost:5000/file/tree');
+    const response = await fetch(
+      'http://localhost:5000/file/tree',
+      { credentials: 'include' }
+    );
     const fileTree = await response.json();
     this.fileTree = fileTree;
   }
@@ -113,9 +152,25 @@ export class AppHome implements ComponentInterface {
   private async fetchFileContent(path: string) {
     const searchParams = new URLSearchParams({ path });
     const searchParamsString = searchParams.toString();
-    const response = await fetch(`http://localhost:5000/file?${searchParamsString}`);
+    const response = await fetch(
+      `http://localhost:5000/file?${searchParamsString}`,
+      { credentials: 'include' }
+    );
     const text = await response.text();
     return text;
+  }
+
+  private async fetchUser() {
+    const response = await fetch(
+      'http://localhost:5000/user/me',
+      { credentials: 'include' }
+    );
+    if (response.ok) {
+      this.user = await response.json();
+    } else {
+      this.user = undefined;
+    }
+    this.fetchFileTree();
   }
 
 }

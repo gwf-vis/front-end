@@ -11,6 +11,8 @@ export namespace Components {
     }
     interface AppRoot {
     }
+    interface AppSignIn {
+    }
     interface AppTreeView {
         "data": TreeNode;
     }
@@ -28,6 +30,12 @@ declare global {
         prototype: HTMLAppRootElement;
         new (): HTMLAppRootElement;
     };
+    interface HTMLAppSignInElement extends Components.AppSignIn, HTMLStencilElement {
+    }
+    var HTMLAppSignInElement: {
+        prototype: HTMLAppSignInElement;
+        new (): HTMLAppSignInElement;
+    };
     interface HTMLAppTreeViewElement extends Components.AppTreeView, HTMLStencilElement {
     }
     var HTMLAppTreeViewElement: {
@@ -37,6 +45,7 @@ declare global {
     interface HTMLElementTagNameMap {
         "app-home": HTMLAppHomeElement;
         "app-root": HTMLAppRootElement;
+        "app-sign-in": HTMLAppSignInElement;
         "app-tree-view": HTMLAppTreeViewElement;
     }
 }
@@ -45,6 +54,8 @@ declare namespace LocalJSX {
     }
     interface AppRoot {
     }
+    interface AppSignIn {
+    }
     interface AppTreeView {
         "data"?: TreeNode;
         "onItemClicked"?: (event: CustomEvent<TreeNode>) => void;
@@ -52,6 +63,7 @@ declare namespace LocalJSX {
     interface IntrinsicElements {
         "app-home": AppHome;
         "app-root": AppRoot;
+        "app-sign-in": AppSignIn;
         "app-tree-view": AppTreeView;
     }
 }
@@ -61,6 +73,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "app-home": LocalJSX.AppHome & JSXBase.HTMLAttributes<HTMLAppHomeElement>;
             "app-root": LocalJSX.AppRoot & JSXBase.HTMLAttributes<HTMLAppRootElement>;
+            "app-sign-in": LocalJSX.AppSignIn & JSXBase.HTMLAttributes<HTMLAppSignInElement>;
             "app-tree-view": LocalJSX.AppTreeView & JSXBase.HTMLAttributes<HTMLAppTreeViewElement>;
         }
     }
