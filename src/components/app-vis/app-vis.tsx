@@ -10,7 +10,7 @@ export class AppVis implements ComponentInterface {
 
   @Element() hostElement: HTMLAppVisElement;
 
-  @Prop() pluginUrl = 'http://localhost:5000/plugins/vis-main';
+  @Prop() pluginUrl = 'http://localhost:5000/files/public/plugins/vis-main';
   @Prop() data: any = 'hello world';
 
   componentDidLoad() {

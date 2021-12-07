@@ -152,10 +152,8 @@ export class AppHome implements ComponentInterface {
   }
 
   private async fetchFileContent(path: string) {
-    const searchParams = new URLSearchParams({ path });
-    const searchParamsString = searchParams.toString();
     const response = await fetch(
-      `http://localhost:5000/file?${searchParamsString}`,
+      `http://localhost:5000/files/${path}`,
       { credentials: 'include' }
     );
     const text = await response.text();
