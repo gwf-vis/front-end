@@ -11,10 +11,10 @@ export class AppVis implements ComponentInterface {
   @Element() hostElement: HTMLAppVisElement;
 
   @Prop() pluginUrl = 'http://localhost:5000/files/public/plugins/vis-main';
-  @Prop() data: any = 'hello world';
 
-  componentDidLoad() {
-    this.loadPlugin();
+  async componentDidLoad() {
+    const data = await (await fetch('http://localhost:5000/file/data')).json();
+    this.loadPlugin(data);
   }
 
   render() {
@@ -23,12 +23,12 @@ export class AppVis implements ComponentInterface {
     );
   }
 
-  private async loadPlugin() {
+  private async loadPlugin(data: any) {
     const pluginsDefinitionUrl = this.pluginUrl + '/index.json';
     const pluginsDefinition = await (await fetch(pluginsDefinitionUrl)).json();
     const pluginTagName = await this.importPlugin(pluginsDefinition);
     const pluginElement = document.createElement(pluginTagName);
-    (pluginElement as any).data = this.data;
+    (pluginElement as any).data = data;
     this.hostElement.shadowRoot.appendChild(pluginElement);
   }
 
@@ -38,9 +38,8 @@ export class AppVis implements ComponentInterface {
     const plugin = pluginModule[pluginsDefinition.exportName];
     const pluginTagName = plugin['TAG_NAME'];
     this.definePlugin(pluginTagName, plugin);
-    pluginsDefinition.requires?.forEach(requiredPluginName => {
-      const requiredPluginDefinition = pluginsDefinition.plugins.find(p => p.name === requiredPluginName);
-      this.importPlugin(requiredPluginDefinition);
+    pluginsDefinition.plugins?.forEach(pluginName => {
+      this.importPlugin(pluginName);
     });
     return pluginTagName;
   }

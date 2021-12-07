@@ -17,7 +17,6 @@ export namespace Components {
         "data": TreeNode;
     }
     interface AppVis {
-        "data": any;
         "pluginUrl": string;
     }
 }
@@ -72,7 +71,6 @@ declare namespace LocalJSX {
         "onItemClicked"?: (event: CustomEvent<TreeNode>) => void;
     }
     interface AppVis {
-        "data"?: any;
         "pluginUrl"?: string;
     }
     interface IntrinsicElements {
