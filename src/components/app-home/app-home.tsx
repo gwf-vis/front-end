@@ -19,6 +19,7 @@ export class AppHome implements ComponentInterface {
 
   @State() fileTree: TreeNode;
   @State() user: User;
+  @State() selectedFilePath: string;
 
   async componentDidLoad() {
     await this.fetchFileTree();
@@ -93,6 +94,7 @@ export class AppHome implements ComponentInterface {
                                 // TODO detect language
                                 this.monacoEditorElement.language = 'python';
                               }
+                              this.selectedFilePath = path;
                             }} />
                         </ion-list>
                       </ion-card-content>
@@ -114,7 +116,7 @@ export class AppHome implements ComponentInterface {
               <ion-col size="9">
                 <ion-card>
                   <ion-toolbar color="secondary">
-                    <ion-title>No File Selected</ion-title>
+                    <ion-title>{this.selectedFilePath || 'No File Selected'}</ion-title>
                     <ion-buttons slot="end">
                       <ion-button title="Run">
                         <ion-icon slot="icon-only" name="play"></ion-icon>
