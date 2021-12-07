@@ -118,7 +118,22 @@ export class AppHome implements ComponentInterface {
                   <ion-toolbar color="secondary">
                     <ion-title>{this.selectedFilePath || 'No File Selected'}</ion-title>
                     <ion-buttons slot="end">
-                      <ion-button title="Run">
+                      <ion-button title="Run" onClick={async () => {
+                        const response = await fetch('http://localhost:5000/file/run', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json'
+                          },
+                          body: JSON.stringify({
+                            code: this.monacoEditorElement.value
+                          })
+                        });
+                        if(response.ok){
+                          const data = await response.json();
+                          const id = data.id;
+                          location.href = 'vis/' + id;
+                        }
+                      }}>
                         <ion-icon slot="icon-only" name="play"></ion-icon>
                       </ion-button>
                       <ion-button title="Clear">

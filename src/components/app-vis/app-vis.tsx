@@ -11,9 +11,10 @@ export class AppVis implements ComponentInterface {
   @Element() hostElement: HTMLAppVisElement;
 
   @Prop() pluginUrl = 'http://localhost:5000/files/public/plugins/vis-main';
+  @Prop() id: string;
 
   async componentDidLoad() {
-    const data = await (await fetch('http://localhost:5000/file/data')).json();
+    const data = await (await fetch('http://localhost:5000/file/vis?id=' + this.id)).json();
     this.loadPlugin(data);
   }
 
