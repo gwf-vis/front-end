@@ -7,7 +7,6 @@ import { VisPluginsDefinition } from './vis-plugins-definition';
   shadow: true,
 })
 export class AppVis implements ComponentInterface {
-
   @Element() hostElement: HTMLAppVisElement;
 
   @Prop() pluginUrl = 'http://localhost:5000/files/public/plugins/vis-main';
@@ -19,9 +18,7 @@ export class AppVis implements ComponentInterface {
   }
 
   render() {
-    return (
-      <Host></Host>
-    );
+    return <Host></Host>;
   }
 
   private async loadPlugin(data: any) {
@@ -34,15 +31,14 @@ export class AppVis implements ComponentInterface {
   }
 
   private async importPlugin(pluginsDefinition: VisPluginsDefinition) {
-    const pluginUrl = this.pluginUrl + '/' + pluginsDefinition.path;
-    const pluginModule = await import(pluginUrl);
-    const plugin = pluginModule[pluginsDefinition.exportName];
-    const pluginTagName = plugin['TAG_NAME'];
-    this.definePlugin(pluginTagName, plugin);
-    pluginsDefinition.plugins?.forEach(pluginName => {
-      this.importPlugin(pluginName);
-    });
-    return pluginTagName;
+    for (const definition of Object.values(pluginsDefinition || {})) {
+      const pluginUrl = this.pluginUrl + '/' + definition.path;
+      const pluginModule = await import(pluginUrl);
+      const plugin = pluginModule[definition.exportName];
+      const pluginTagName = plugin['TAG_NAME'];
+      this.definePlugin(pluginTagName, plugin);
+    }
+    return pluginsDefinition['Main'].tagName;
   }
 
   private definePlugin(tagName: string, plugin: CustomElementConstructor) {
@@ -50,5 +46,4 @@ export class AppVis implements ComponentInterface {
       customElements.define(tagName, plugin);
     }
   }
-
 }
