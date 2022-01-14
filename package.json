@@ -9,8 +9,8 @@
   ],
   "scripts": {
     "build": "stencil build",
-    "start": "stencil build --dev --watch --serve",
-    "start.no-open": "stencil build --dev --watch --serve --no-open",
+    "start": "NODE_ENV=dev stencil build --dev --watch --serve",
+    "start.no-open": "NODE_ENV=dev stencil build --dev --watch --serve --no-open",
     "test": "stencil test --spec --e2e",
     "test.watch": "stencil test --spec --e2e --watch",
     "generate": "stencil generate"
