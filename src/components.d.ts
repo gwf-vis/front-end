@@ -17,8 +17,8 @@ export namespace Components {
         "data": TreeNode;
     }
     interface AppVis {
-        "id": string;
         "pluginUrl": string;
+        "visId": string;
     }
 }
 declare global {
@@ -72,8 +72,8 @@ declare namespace LocalJSX {
         "onItemClicked"?: (event: CustomEvent<TreeNode>) => void;
     }
     interface AppVis {
-        "id"?: string;
         "pluginUrl"?: string;
+        "visId"?: string;
     }
     interface IntrinsicElements {
         "app-home": AppHome;
