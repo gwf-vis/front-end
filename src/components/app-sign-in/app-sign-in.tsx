@@ -1,4 +1,4 @@
-import { Component, Host, h } from '@stencil/core';
+import { Component, Host, h, Env } from '@stencil/core';
 import { popoverController } from '@ionic/core';
 
 @Component({
@@ -17,7 +17,7 @@ export class AppSignIn {
           const username = target.username.value;
           const password = target.password.value;
           await fetch(
-            'http://localhost:5000/auth/sign-in',
+            `${Env.SERVER_BASE_URL}/auth/sign-in`,
             {
               method: 'POST',
               credentials: 'include',

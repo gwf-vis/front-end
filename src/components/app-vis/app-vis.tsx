@@ -1,4 +1,4 @@
-import { Component, Host, h, ComponentInterface, Element, Prop } from '@stencil/core';
+import { Component, Host, h, ComponentInterface, Element, Prop, Env } from '@stencil/core';
 import { VisPluginsDefinition } from './vis-plugins-definition';
 
 @Component({
@@ -9,11 +9,11 @@ import { VisPluginsDefinition } from './vis-plugins-definition';
 export class AppVis implements ComponentInterface {
   @Element() hostElement: HTMLAppVisElement;
 
-  @Prop() pluginUrl = 'http://localhost:5000/files/public/plugins/vis-main';
+  @Prop() pluginUrl = `http://${Env.SERVER_BASE_URL}/files/public/plugins/vis-main`;
   @Prop() id: string;
 
   async componentDidLoad() {
-    const data = await (await fetch('http://localhost:5000/file/vis?id=' + this.id)).json();
+    const data = await (await fetch(`${Env.SERVER_BASE_URL}/file/vis?id=${this.id}`)).json();
     this.loadPlugin(data);
   }
 

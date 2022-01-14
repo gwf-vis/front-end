@@ -1,4 +1,4 @@
-import { Component, ComponentInterface, h, Host, State } from '@stencil/core';
+import { Component, ComponentInterface, Env, h, Host, State } from '@stencil/core';
 import '@seanwong24/s-monaco-editor';
 import { TreeNode } from '../app-tree-view/app-tree-view';
 import { popoverController } from '@ionic/core';
@@ -14,7 +14,6 @@ export interface User {
   scoped: true,
 })
 export class AppHome implements ComponentInterface {
-
   private monacoEditorElement: HTMLSMonacoEditorElement;
 
   @State() fileTree: TreeNode;
@@ -37,20 +36,18 @@ export class AppHome implements ComponentInterface {
               <ion-button
                 title={this.user ? 'Sign out' : 'Sign in'}
                 onClick={async () => {
+                  debugger
                   if (this.user) {
-                    await fetch(
-                      'http://localhost:5000/auth/sign-out',
-                      {
-                        method: 'POST',
-                        credentials: 'include'
-                      }
-                    );
+                    await fetch(`${Env.SERVER_BASE_URL}/auth/sign-out`, {
+                      method: 'POST',
+                      credentials: 'include',
+                    });
                     this.fetchUser();
                   } else {
                     const popover = await popoverController.create({
                       component: 'app-sign-in',
                       translucent: true,
-                      id: 'sign-in'
+                      id: 'sign-in',
                     });
                     popover.addEventListener('ionPopoverDidDismiss', () => this.fetchUser());
                     await popover.present();
@@ -95,7 +92,8 @@ export class AppHome implements ComponentInterface {
                                 this.monacoEditorElement.language = 'python';
                               }
                               this.selectedFilePath = path;
-                            }} />
+                            }}
+                          />
                         </ion-list>
                       </ion-card-content>
                     </ion-card>
@@ -118,22 +116,25 @@ export class AppHome implements ComponentInterface {
                   <ion-toolbar color="secondary">
                     <ion-title>{this.selectedFilePath || 'No File Selected'}</ion-title>
                     <ion-buttons slot="end">
-                      <ion-button title="Run" onClick={async () => {
-                        const response = await fetch('http://localhost:5000/file/run', {
-                          method: 'POST',
-                          headers: {
-                            'Content-Type': 'application/json'
-                          },
-                          body: JSON.stringify({
-                            code: this.monacoEditorElement.value
-                          })
-                        });
-                        if(response.ok){
-                          const data = await response.json();
-                          const id = data.id;
-                          location.href = 'vis/' + id;
-                        }
-                      }}>
+                      <ion-button
+                        title="Run"
+                        onClick={async () => {
+                          const response = await fetch(`${Env.SERVER_BASE_URL}/file/run`, {
+                            method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                              code: this.monacoEditorElement.value,
+                            }),
+                          });
+                          if (response.ok) {
+                            const data = await response.json();
+                            const id = data.id;
+                            location.href = 'vis/' + id;
+                          }
+                        }}
+                      >
                         <ion-icon slot="icon-only" name="play"></ion-icon>
                       </ion-button>
                       <ion-button title="Clear">
@@ -145,8 +146,8 @@ export class AppHome implements ComponentInterface {
                     </ion-buttons>
                   </ion-toolbar>
                   {/* TODO considering using flex or resize observer for the height */}
-                  <ion-card-content style={{ height: 'calc(100% - 56px)' }} >
-                    <s-monaco-editor ref={(el: HTMLSMonacoEditorElement) => this.monacoEditorElement = el} />
+                  <ion-card-content style={{ height: 'calc(100% - 56px)' }}>
+                    <s-monaco-editor ref={(el: HTMLSMonacoEditorElement) => (this.monacoEditorElement = el)} />
                   </ion-card-content>
                 </ion-card>
               </ion-col>
@@ -158,28 +159,19 @@ export class AppHome implements ComponentInterface {
   }
 
   private async fetchFileTree() {
-    const response = await fetch(
-      'http://localhost:5000/file/tree',
-      { credentials: 'include' }
-    );
+    const response = await fetch(`${Env.SERVER_BASE_URL}/file/tree`, { credentials: 'include' });
     const fileTree = await response.json();
     this.fileTree = fileTree;
   }
 
   private async fetchFileContent(path: string) {
-    const response = await fetch(
-      `http://localhost:5000/files/${path}`,
-      { credentials: 'include' }
-    );
+    const response = await fetch(`${Env.SERVER_BASE_URL}/files/${path}`, { credentials: 'include' });
     const text = await response.text();
     return text;
   }
 
   private async fetchUser() {
-    const response = await fetch(
-      'http://localhost:5000/user/me',
-      { credentials: 'include' }
-    );
+    const response = await fetch(`${Env.SERVER_BASE_URL}/user/me`, { credentials: 'include' });
     if (response.ok) {
       this.user = await response.json();
     } else {
@@ -187,5 +179,4 @@ export class AppHome implements ComponentInterface {
     }
     this.fetchFileTree();
   }
-
 }
