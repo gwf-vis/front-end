@@ -131,7 +131,7 @@ export class AppHome implements ComponentInterface {
                           if (response.ok) {
                             const data = await response.json();
                             const id = data.id;
-                            location.href = 'vis/' + id;
+                            location.hash = '/vis/' + id;
                           }
                         }}
                       >
