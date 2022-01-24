@@ -9,7 +9,7 @@ import { VisPluginsDefinition } from './vis-plugins-definition';
 export class AppVis implements ComponentInterface {
   @Element() hostElement: HTMLAppVisElement;
 
-  @Prop() pluginUrl = `../${Env.SERVER_BASE_URL}/files/public/plugins/vis-main`;
+  @Prop() pluginUrl = `${Env.SERVER_BASE_URL}/files/public/plugins/vis-main`;
   @Prop() visId: string;
 
   async componentDidLoad() {
@@ -32,7 +32,7 @@ export class AppVis implements ComponentInterface {
 
   private async importPlugin(pluginsDefinition: VisPluginsDefinition) {
     for (const definition of Object.values(pluginsDefinition || {})) {
-      const pluginUrl = this.pluginUrl + '/' + definition.path;
+      const pluginUrl = '../' + this.pluginUrl + '/' + definition.path;
       const pluginModule = await import(pluginUrl);
       const plugin = pluginModule[definition.exportName];
       const pluginTagName = plugin['TAG_NAME'];
