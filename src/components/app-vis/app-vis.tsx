@@ -9,7 +9,7 @@ import { VisPluginsDefinition } from './vis-plugins-definition';
 export class AppVis implements ComponentInterface {
   @Element() hostElement: HTMLAppVisElement;
 
-  @Prop() pluginUrl = `${Env.SERVER_BASE_URL}/files/public/plugins/vis-main`;
+  @Prop() pluginUrl = `../${Env.SERVER_BASE_URL}/files/public/plugins/vis-main`;
   @Prop() visId: string;
 
   async componentDidLoad() {
