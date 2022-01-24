@@ -26,6 +26,7 @@ export class AppVis implements ComponentInterface {
     const pluginsDefinition = await (await fetch(pluginsDefinitionUrl)).json();
     const pluginTagName = await this.importPlugin(pluginsDefinition);
     const pluginElement = document.createElement(pluginTagName);
+    (pluginElement as any).serverFileAPIPath = `${Env.SERVER_BASE_URL}/files`;
     (pluginElement as any).data = data;
     this.hostElement.shadowRoot.appendChild(pluginElement);
   }
