@@ -20,7 +20,7 @@ export class AppHome implements ComponentInterface {
   @State() datasetTree: TreeNode;
   @State() user: User;
   @State() selectedFilePath: string;
-  @State() selectedTab = 'datasets';
+  @State() selectedTab = 'scripts';
 
   async componentDidLoad() {
     await this.fetchFileTree();
@@ -83,11 +83,13 @@ export class AppHome implements ComponentInterface {
                     <ion-card>
                       <ion-toolbar color="secondary">
                         <ion-segment scrollable value={this.selectedTab} onIonChange={({ detail }) => (this.selectedTab = detail.value)}>
+                          <ion-segment-button value="scripts">Scripts</ion-segment-button>
                           <ion-segment-button value="datasets">Datasets</ion-segment-button>
                           <ion-segment-button value="files">Files</ion-segment-button>
                         </ion-segment>
                       </ion-toolbar>
                       <ion-card-content>
+                        {this.selectedTab === 'scripts' && this.renderScriptsView()}
                         {this.selectedTab === 'datasets' && this.renderDatasetsView()}
                         {this.selectedTab === 'files' && this.renderFilesView()}
                       </ion-card-content>
@@ -115,7 +117,7 @@ export class AppHome implements ComponentInterface {
                           if (response.ok) {
                             const data = await response.json();
                             const id = data.id;
-                            window.open('/vis/' + id);
+                            window.open('./#/vis/' + id);
                           }
                         }}
                       >
@@ -139,6 +141,30 @@ export class AppHome implements ComponentInterface {
           </ion-grid>
         </ion-content>
       </Host>
+    );
+  }
+
+  private renderScriptsView() {
+    const scripts = this.fileTree?.children?.find(child => child.name === 'public')?.children?.find(child => child.name === 'scripts')?.children;
+    const scriptsTree = {
+      name: 'root',
+      children: [{ name: 'public', children: scripts }],
+    };
+    return (
+      <app-tree-view
+        data={scriptsTree}
+        onItemClicked={async ({ detail }) => {
+          const rootPath = `${this.fileTree.name}/`;
+          const path = detail.path?.slice(rootPath.length);
+          const fileContent = await this.fetchFileContent(path);
+          if (this.monacoEditorElement) {
+            this.monacoEditorElement.value = fileContent;
+            // TODO detect language
+            this.monacoEditorElement.language = 'python';
+          }
+          this.selectedFilePath = path;
+        }}
+      />
     );
   }
 
