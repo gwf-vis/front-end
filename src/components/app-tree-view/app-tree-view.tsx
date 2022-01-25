@@ -14,33 +14,7 @@ export interface TreeNode {
 export class AppTreeView implements ComponentInterface {
   @Element() hostElement: HTMLAppTreeViewElement;
 
-  @Prop() data: TreeNode = {
-    name: 'data',
-    children: [
-      {
-        name: 'personal',
-        children: [
-          {
-            name: 'data',
-            children: [{ name: '1.json' }, { name: '2.json' }],
-          },
-          {
-            name: 'out',
-            children: [],
-          },
-        ],
-      },
-      {
-        name: 'public',
-        children: [
-          {
-            name: 'data',
-            children: [{ name: '1.json' }, { name: '2.json' }],
-          },
-        ],
-      },
-    ],
-  };
+  @Prop() data?: TreeNode;
 
   @Event() itemClicked: EventEmitter<TreeNode>;
   @Event() itemRightClicked: EventEmitter<TreeNode>;
@@ -52,7 +26,7 @@ export class AppTreeView implements ComponentInterface {
   private renderTreeNode(treeNode: TreeNode, root?: boolean) {
     return (
       <ul id={root ? 'tree-root' : ''} class={root ? '' : 'nested'}>
-        {treeNode.children?.map(childNode =>
+        {treeNode?.children?.map(childNode =>
           childNode.children ? (
             <li
               onClick={event => {

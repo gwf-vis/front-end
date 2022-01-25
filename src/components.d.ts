@@ -14,7 +14,7 @@ export namespace Components {
     interface AppSignIn {
     }
     interface AppTreeView {
-        "data": TreeNode;
+        "data"?: TreeNode;
     }
     interface AppVis {
         "pluginUrl": string;

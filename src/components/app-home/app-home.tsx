@@ -25,18 +25,7 @@ export class AppHome implements ComponentInterface {
   async componentDidLoad() {
     await this.fetchFileTree();
     await this.fetchUser();
-
-    const datasets = this.fileTree?.children
-      ?.find(child => child.name === 'public')
-      ?.children?.find(child => child.name === 'data')
-      ?.children.map(child => ({
-        name: child.name,
-        children: child?.children?.find(child => child.name === 'data')?.children?.map(child => ({ name: child.name })),
-      }));
-    this.datasetTree = {
-      name: 'root',
-      children: [{ name: 'public', children: datasets }],
-    };
+    await this.fetchDatasetTree();
   }
 
   render() {
@@ -50,7 +39,6 @@ export class AppHome implements ComponentInterface {
               <ion-button
                 title={this.user ? 'Sign out' : 'Sign in'}
                 onClick={async () => {
-                  debugger;
                   if (this.user) {
                     await fetch(`${Env.SERVER_BASE_URL}/auth/sign-out`, {
                       method: 'POST',
@@ -172,7 +160,7 @@ export class AppHome implements ComponentInterface {
   }
 
   private renderDatasetsView() {
-    return <app-tree-view data={this.datasetTree} />;
+    return <app-tree-view data={this.datasetTree} onItemClicked={({ detail }) => !detail.children && alert(detail['description'])} />;
   }
 
   private renderFilesView() {
@@ -218,5 +206,29 @@ export class AppHome implements ComponentInterface {
       this.user = undefined;
     }
     this.fetchFileTree();
+  }
+
+  private async fetchDatasetTree() {
+    const children = await Promise.all(
+      this.fileTree?.children?.map(async child => ({
+        name: child.name,
+        children: await Promise.all(
+          child?.children
+            ?.find(child => child.name === 'data')
+            ?.children.map(async child => {
+              const datasetInfo = JSON.parse(await this.fetchFileContent(`public/data/${child.name}/index.json`));
+              return {
+                name: child.name,
+                children: datasetInfo.variables,
+              };
+            }),
+        ),
+      })),
+    );
+    const datasetTree = {
+      name: 'root',
+      children,
+    };
+    this.datasetTree = datasetTree;
   }
 }
