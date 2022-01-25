@@ -154,16 +154,19 @@ export class AppHome implements ComponentInterface {
       <app-tree-view
         data={scriptsTree}
         onItemClicked={async ({ detail }) => {
-          const rootPath = `${this.fileTree.name}/`;
-          const path = detail.path?.slice(rootPath.length);
-          const fileContent = await this.fetchFileContent(path);
-          if (this.monacoEditorElement) {
-            this.monacoEditorElement.value = fileContent;
-            // TODO detect language
-            this.monacoEditorElement.language = 'python';
+          if (!detail.children) {
+            const rootPath = `${this.fileTree.name}/`;
+            const path = detail.path?.slice(rootPath.length);
+            const fileContent = await this.fetchFileContent(path);
+            if (this.monacoEditorElement) {
+              this.monacoEditorElement.value = fileContent;
+              // TODO detect language
+              this.monacoEditorElement.language = 'python';
+            }
+            this.selectedFilePath = path;
           }
-          this.selectedFilePath = path;
         }}
+        onItemRightClicked={({ detail }) => alert(detail.name)}
       />
     );
   }
@@ -178,15 +181,17 @@ export class AppHome implements ComponentInterface {
         <app-tree-view
           data={this.fileTree}
           onItemClicked={async ({ detail }) => {
-            const rootPath = `${this.fileTree.name}/`;
-            const path = detail.path?.slice(rootPath.length);
-            const fileContent = await this.fetchFileContent(path);
-            if (this.monacoEditorElement) {
-              this.monacoEditorElement.value = fileContent;
-              // TODO detect language
-              this.monacoEditorElement.language = 'python';
+            if (!detail.children) {
+              const rootPath = `${this.fileTree.name}/`;
+              const path = detail.path?.slice(rootPath.length);
+              const fileContent = await this.fetchFileContent(path);
+              if (this.monacoEditorElement) {
+                this.monacoEditorElement.value = fileContent;
+                // TODO detect language
+                this.monacoEditorElement.language = 'python';
+              }
+              this.selectedFilePath = path;
             }
-            this.selectedFilePath = path;
           }}
         />
       </ion-list>

@@ -70,6 +70,7 @@ declare namespace LocalJSX {
     interface AppTreeView {
         "data"?: TreeNode;
         "onItemClicked"?: (event: CustomEvent<TreeNode>) => void;
+        "onItemRightClicked"?: (event: CustomEvent<TreeNode>) => void;
     }
     interface AppVis {
         "pluginUrl"?: string;
