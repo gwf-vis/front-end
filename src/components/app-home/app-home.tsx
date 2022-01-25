@@ -17,12 +17,26 @@ export class AppHome implements ComponentInterface {
   private monacoEditorElement: HTMLSMonacoEditorElement;
 
   @State() fileTree: TreeNode;
+  @State() datasetTree: TreeNode;
   @State() user: User;
   @State() selectedFilePath: string;
+  @State() selectedTab = 'datasets';
 
   async componentDidLoad() {
     await this.fetchFileTree();
     await this.fetchUser();
+    debugger;
+    const datasets = this.fileTree?.children
+      ?.find(child => child.name === 'public')
+      ?.children?.find(child => child.name === 'data')
+      ?.children.map(child => ({
+        name: child.name,
+        children: child?.children?.find(child => child.name === 'data')?.children?.map(child => ({ name: child.name })),
+      }));
+    this.datasetTree = {
+      name: 'root',
+      children: [{ name: 'public', children: datasets }],
+    };
   }
 
   render() {
@@ -65,48 +79,18 @@ export class AppHome implements ComponentInterface {
             <ion-row>
               <ion-col size="3" style={{ padding: '0' }}>
                 <ion-row style={{ padding: '0' }}>
-                  <ion-col size="12" style={{ height: '50%' }}>
+                  <ion-col size="12">
                     <ion-card>
                       <ion-toolbar color="secondary">
-                        <ion-title>Files</ion-title>
-                        <ion-buttons slot="end">
-                          <ion-button title="Create file">
-                            <ion-icon slot="icon-only" name="add"></ion-icon>
-                          </ion-button>
-                          <ion-button title="Refresh" onClick={() => this.fetchFileTree()}>
-                            <ion-icon slot="icon-only" name="refresh"></ion-icon>
-                          </ion-button>
-                        </ion-buttons>
-                      </ion-toolbar>
-                      <ion-card-content>
-                        <ion-list>
-                          <app-tree-view
-                            data={this.fileTree}
-                            onItemClicked={async ({ detail }) => {
-                              const rootPath = `${this.fileTree.name}/`;
-                              const path = detail.path?.slice(rootPath.length);
-                              const fileContent = await this.fetchFileContent(path);
-                              if (this.monacoEditorElement) {
-                                this.monacoEditorElement.value = fileContent;
-                                // TODO detect language
-                                this.monacoEditorElement.language = 'python';
-                              }
-                              this.selectedFilePath = path;
-                            }}
-                          />
-                        </ion-list>
-                      </ion-card-content>
-                    </ion-card>
-                  </ion-col>
-                  <ion-col size="12" style={{ height: '50%' }}>
-                    <ion-card>
-                      <ion-toolbar color="secondary">
-                        <ion-segment scrollable>
-                          <ion-segment-button>Variables</ion-segment-button>
-                          <ion-segment-button>Charts</ion-segment-button>
+                        <ion-segment scrollable value={this.selectedTab} onIonChange={({ detail }) => (this.selectedTab = detail.value)}>
+                          <ion-segment-button value="datasets">Datasets</ion-segment-button>
+                          <ion-segment-button value="files">Files</ion-segment-button>
                         </ion-segment>
                       </ion-toolbar>
-                      <ion-card-content>content</ion-card-content>
+                      <ion-card-content>
+                        {this.selectedTab === 'datasets' && this.renderDatasetsView()}
+                        {this.selectedTab === 'files' && this.renderFilesView()}
+                      </ion-card-content>
                     </ion-card>
                   </ion-col>
                 </ion-row>
@@ -155,6 +139,31 @@ export class AppHome implements ComponentInterface {
           </ion-grid>
         </ion-content>
       </Host>
+    );
+  }
+
+  private renderDatasetsView() {
+    return <app-tree-view data={this.datasetTree} />;
+  }
+
+  private renderFilesView() {
+    return (
+      <ion-list>
+        <app-tree-view
+          data={this.fileTree}
+          onItemClicked={async ({ detail }) => {
+            const rootPath = `${this.fileTree.name}/`;
+            const path = detail.path?.slice(rootPath.length);
+            const fileContent = await this.fetchFileContent(path);
+            if (this.monacoEditorElement) {
+              this.monacoEditorElement.value = fileContent;
+              // TODO detect language
+              this.monacoEditorElement.language = 'python';
+            }
+            this.selectedFilePath = path;
+          }}
+        />
+      </ion-list>
     );
   }
 
