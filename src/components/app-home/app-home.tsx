@@ -25,7 +25,7 @@ export class AppHome implements ComponentInterface {
   async componentDidLoad() {
     await this.fetchFileTree();
     await this.fetchUser();
-    debugger;
+
     const datasets = this.fileTree?.children
       ?.find(child => child.name === 'public')
       ?.children?.find(child => child.name === 'data')
