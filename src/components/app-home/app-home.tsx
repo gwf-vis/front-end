@@ -36,7 +36,7 @@ export class AppHome implements ComponentInterface {
               <ion-button
                 title={this.user ? 'Sign out' : 'Sign in'}
                 onClick={async () => {
-                  debugger
+                  debugger;
                   if (this.user) {
                     await fetch(`${Env.SERVER_BASE_URL}/auth/sign-out`, {
                       method: 'POST',
@@ -131,7 +131,7 @@ export class AppHome implements ComponentInterface {
                           if (response.ok) {
                             const data = await response.json();
                             const id = data.id;
-                            location.hash = '/vis/' + id;
+                            window.open('/vis/' + id);
                           }
                         }}
                       >
