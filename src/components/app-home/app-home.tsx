@@ -21,6 +21,7 @@ export class AppHome implements ComponentInterface {
   @State() user: User;
   @State() selectedFilePath: string;
   @State() selectedTab = 'scripts';
+  @State() scriptOutput: string;
 
   async componentDidLoad() {
     await this.fetchFileTree();
@@ -86,47 +87,58 @@ export class AppHome implements ComponentInterface {
                 </ion-row>
               </ion-col>
               <ion-col size="9">
-                <ion-card>
-                  <ion-toolbar color="secondary">
-                    <ion-title>{this.selectedFilePath || 'No File Selected'}</ion-title>
-                    <ion-buttons slot="end">
-                      <ion-button title="Save" onClick={() => this.updateFile(this.selectedFilePath, this.monacoEditorElement.value)}>
-                        <ion-icon slot="icon-only" name="save"></ion-icon>
-                      </ion-button>
-                      <ion-button
-                        title="Run"
-                        onClick={async () => {
-                          const response = await fetch(`${Env.SERVER_BASE_URL}/file/run`, {
-                            method: 'POST',
-                            headers: {
-                              'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                              code: this.monacoEditorElement.value,
-                            }),
-                          });
-                          if (response.ok) {
-                            const data = await response.json();
-                            const id = data.id;
-                            window.open('./#/vis/' + id);
-                          }
-                        }}
-                      >
-                        <ion-icon slot="icon-only" name="play"></ion-icon>
-                      </ion-button>
-                      <ion-button title="Clear">
-                        <ion-icon slot="icon-only" name="trash"></ion-icon>
-                      </ion-button>
-                      <ion-button title="Documentation">
-                        <ion-icon slot="icon-only" name="help"></ion-icon>
-                      </ion-button>
-                    </ion-buttons>
-                  </ion-toolbar>
-                  {/* TODO considering using flex or resize observer for the height */}
-                  <ion-card-content style={{ height: 'calc(100% - 56px)' }}>
-                    <s-monaco-editor ref={(el: HTMLSMonacoEditorElement) => (this.monacoEditorElement = el)} />
-                  </ion-card-content>
-                </ion-card>
+                <ion-row>
+                  <ion-col size="12" style={{ padding: '0', height: '70%' }}>
+                    <ion-card>
+                      <ion-toolbar color="secondary">
+                        <ion-title>{this.selectedFilePath || 'No File Selected'}</ion-title>
+                        <ion-buttons slot="end">
+                          <ion-button title="Save" onClick={() => this.updateFile(this.selectedFilePath, this.monacoEditorElement.value)}>
+                            <ion-icon slot="icon-only" name="save"></ion-icon>
+                          </ion-button>
+                          <ion-button
+                            title="Run"
+                            onClick={async () => {
+                              const response = await fetch(`${Env.SERVER_BASE_URL}/file/run`, {
+                                method: 'POST',
+                                headers: {
+                                  'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                  code: this.monacoEditorElement.value,
+                                }),
+                              });
+                              if (response.ok) {
+                                const data = await response.json();
+                                const id = data.id;
+                                debugger
+                                this.scriptOutput = data.output;
+                                if (data.result) {
+                                  window.open('./#/vis/' + id);
+                                }
+                              }
+                            }}
+                          >
+                            <ion-icon slot="icon-only" name="play"></ion-icon>
+                          </ion-button>
+                          <ion-button title="Clear">
+                            <ion-icon slot="icon-only" name="trash"></ion-icon>
+                          </ion-button>
+                          <ion-button title="Documentation">
+                            <ion-icon slot="icon-only" name="help"></ion-icon>
+                          </ion-button>
+                        </ion-buttons>
+                      </ion-toolbar>
+                      {/* TODO considering using flex or resize observer for the height */}
+                      <ion-card-content style={{ height: 'calc(100% - 56px)' }}>
+                        <s-monaco-editor ref={(el: HTMLSMonacoEditorElement) => (this.monacoEditorElement = el)} />
+                      </ion-card-content>
+                    </ion-card>
+                  </ion-col>
+                  <ion-col size="12">
+                    <ion-card style={{ padding: '0', height: '30%' }}>{this.scriptOutput}</ion-card>
+                  </ion-col>
+                </ion-row>
               </ion-col>
             </ion-row>
           </ion-grid>
