@@ -7,6 +7,7 @@
   "files": [
     "dist/"
   ],
+  "homepage": ".",
   "scripts": {
     "build": "stencil build",
     "start": "NODE_ENV=dev stencil build --dev --watch --serve",
