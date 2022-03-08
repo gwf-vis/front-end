@@ -90,6 +90,9 @@ export class AppHome implements ComponentInterface {
                   <ion-toolbar color="secondary">
                     <ion-title>{this.selectedFilePath || 'No File Selected'}</ion-title>
                     <ion-buttons slot="end">
+                      <ion-button title="Save" onClick={() => this.updateFile(this.selectedFilePath, this.monacoEditorElement.value)}>
+                        <ion-icon slot="icon-only" name="save"></ion-icon>
+                      </ion-button>
                       <ion-button
                         title="Run"
                         onClick={async () => {
@@ -133,10 +136,17 @@ export class AppHome implements ComponentInterface {
   }
 
   private renderScriptsView() {
-    const scripts = this.fileTree?.children?.find(child => child.name === 'public')?.children?.find(child => child.name === 'scripts')?.children;
+    const children = this.fileTree?.children?.map(child => {
+      const editable = child.name === this.user?.username;
+      return {
+        name: child.name,
+        children: child?.children?.find(child => child.name === 'scripts')?.children?.map(child => ({ ...child, editable })),
+        editable,
+      };
+    });
     const scriptsTree = {
       name: 'root',
-      children: [{ name: 'public', children: scripts }],
+      children: children,
     };
     return (
       <app-tree-view
@@ -154,7 +164,20 @@ export class AppHome implements ComponentInterface {
             this.selectedFilePath = path;
           }
         }}
-        onItemRightClicked={({ detail }) => alert(detail.name)}
+        onItemRightClicked={({ detail }) => {
+          if (detail.editable) {
+            if (detail.children) {
+              const fileName = prompt('Creating a new file');
+              if (fileName !== null) {
+                this.createFile(`${this.user?.username}/scripts/${fileName}`, '');
+              }
+            } else {
+              if (confirm(`Delete ${detail.name}?`)) {
+                this.deleteFile(`${this.user?.username}/scripts/${detail.name}`);
+              }
+            }
+          }
+        }}
       />
     );
   }
@@ -210,18 +233,19 @@ export class AppHome implements ComponentInterface {
 
   private async fetchDatasetTree() {
     const children = await Promise.all(
-      this.fileTree?.children?.map(async child => ({
-        name: child.name,
+      this.fileTree?.children?.map(async rootChild => ({
+        name: rootChild.name,
         children: await Promise.all(
-          child?.children
+          rootChild?.children
             ?.find(child => child.name === 'data')
-            ?.children.map(async child => {
-              const datasetInfo = JSON.parse(await this.fetchFileContent(`public/data/${child.name}/index.json`));
+            ?.children?.map(async child => {
+              const datasetInfo = JSON.parse(await this.fetchFileContent(`${rootChild.name}/data/${child.name}/index.json`));
               return {
                 name: child.name,
                 children: datasetInfo.variables,
               };
-            }),
+            })
+            .filter(Boolean) || [],
         ),
       })),
     );
@@ -230,5 +254,38 @@ export class AppHome implements ComponentInterface {
       children,
     };
     this.datasetTree = datasetTree;
+  }
+
+  private async createFile(path: string, content: string) {
+    await fetch(`${Env.SERVER_BASE_URL}/file?path=${path}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ content }),
+    });
+    this.fetchFileTree();
+  }
+
+  private async updateFile(path: string, content: string) {
+    debugger;
+    await fetch(`${Env.SERVER_BASE_URL}/file?path=${path}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ content }),
+    });
+    this.fetchFileTree();
+  }
+
+  private async deleteFile(path: string) {
+    await fetch(`${Env.SERVER_BASE_URL}/file?path=${path}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    });
+    this.fetchFileTree();
   }
 }
