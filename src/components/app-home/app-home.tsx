@@ -21,7 +21,7 @@ export class AppHome implements ComponentInterface {
   @State() user: User;
   @State() selectedFilePath: string;
   @State() selectedTab = 'scripts';
-  @State() scriptOutput: string;
+  @State() scriptOutput = '';
 
   async componentDidLoad() {
     await this.fetchFileTree();
@@ -99,6 +99,7 @@ export class AppHome implements ComponentInterface {
                           <ion-button
                             title="Run"
                             onClick={async () => {
+                              this.scriptOutput += '\n' + 'adfads';
                               const response = await fetch(`${Env.SERVER_BASE_URL}/file/run`, {
                                 method: 'POST',
                                 headers: {
@@ -111,8 +112,8 @@ export class AppHome implements ComponentInterface {
                               if (response.ok) {
                                 const data = await response.json();
                                 const id = data.id;
-                                debugger
-                                this.scriptOutput = data.output;
+                                debugger;
+                                this.scriptOutput += '\n' + data.output;
                                 if (data.result) {
                                   window.open('./#/vis/' + id);
                                 }
@@ -136,7 +137,13 @@ export class AppHome implements ComponentInterface {
                     </ion-card>
                   </ion-col>
                   <ion-col size="12">
-                    <ion-card style={{ padding: '0', height: '30%' }}>{this.scriptOutput}</ion-card>
+                    <ion-card style={{ padding: '0', height: '30%' }}>
+                      <ion-card-content style={{ height: '100%', overflowY: 'auto' }}>
+                        {this.scriptOutput?.split('\n').map(line => (
+                          <p>{line}</p>
+                        ))}
+                      </ion-card-content>
+                    </ion-card>
                   </ion-col>
                 </ion-row>
               </ion-col>
