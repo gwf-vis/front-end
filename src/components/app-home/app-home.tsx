@@ -99,7 +99,6 @@ export class AppHome implements ComponentInterface {
                           <ion-button
                             title="Run"
                             onClick={async () => {
-                              this.scriptOutput += '\n' + 'adfads';
                               const response = await fetch(`${Env.SERVER_BASE_URL}/file/run`, {
                                 method: 'POST',
                                 headers: {
@@ -112,7 +111,6 @@ export class AppHome implements ComponentInterface {
                               if (response.ok) {
                                 const data = await response.json();
                                 const id = data.id;
-                                debugger;
                                 this.scriptOutput += '\n' + data.output;
                                 if (data.result) {
                                   window.open('./#/vis/' + id);
@@ -139,9 +137,16 @@ export class AppHome implements ComponentInterface {
                   <ion-col size="12">
                     <ion-card style={{ padding: '0', height: '30%' }}>
                       <ion-card-content style={{ height: '100%', overflowY: 'auto' }}>
-                        {this.scriptOutput?.split('\n').map(line => (
-                          <p>{line}</p>
-                        ))}
+                        {this.scriptOutput?.split('\n').map(line =>
+                          line.match(/^data:image\/*;*,*/) ? (
+                            <div>
+                              <img src={line} style={{ maxHeight: '10rem' }} />
+                              <a href={line} download>Download</a>
+                            </div>
+                          ) : (
+                            <p>{line}</p>
+                          ),
+                        )}
                       </ion-card-content>
                     </ion-card>
                   </ion-col>
