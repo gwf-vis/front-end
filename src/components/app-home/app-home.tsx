@@ -24,6 +24,19 @@ export class AppHome implements ComponentInterface {
   @State() scriptOutput = '';
 
   async componentDidLoad() {
+    const ticketMatch = window.location.href.match(/\?ticket=ST-.+-cas/);
+    if (ticketMatch) {
+      const [_, ticket] = ticketMatch[0].split('ticket=');
+      const service = encodeURIComponent(window.location.origin + '/');
+      const response = await fetch(`${Env.SERVER_BASE_URL}/auth/validate?service=${service}&ticket=${ticket}`);
+      if (response.ok) {
+        sessionStorage.setItem('NSID', await response.text());
+        window.location.href = window.location.href.split('?ticket=')[0];
+      } else {
+        sessionStorage.removeItem('NSID');
+      }
+    }
+
     await this.fetchFileTree();
     await this.fetchUser();
     await this.fetchDatasetTree();
@@ -58,6 +71,16 @@ export class AppHome implements ComponentInterface {
                 }}
               >
                 <ion-icon name={this.user ? 'log-out' : 'log-in'} slot="icon-only" />
+              </ion-button>
+              <ion-button
+                href={
+                  sessionStorage.getItem('NSID')
+                    ? `https://cas.usask.ca/cas/logout?service=${encodeURIComponent(window.location.origin + '/')}`
+                    : `https://cas.usask.ca/cas/login?service=${encodeURIComponent(window.location.origin + '/')}`
+                }
+                onClick={() => sessionStorage.getItem('NSID') && sessionStorage.removeItem('NSID')}
+              >
+                {sessionStorage.getItem('NSID') || 'Test NSID login'}
               </ion-button>
             </ion-buttons>
           </ion-toolbar>
@@ -141,7 +164,9 @@ export class AppHome implements ComponentInterface {
                           line.match(/^data:image\/*;*,*/) ? (
                             <div>
                               <img src={line} style={{ maxHeight: '10rem' }} />
-                              <a href={line} download>Download</a>
+                              <a href={line} download>
+                                Download
+                              </a>
                             </div>
                           ) : (
                             <p>{line}</p>
