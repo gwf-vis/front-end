@@ -3,7 +3,7 @@ import { Config } from '@stencil/core';
 // https://stenciljs.com/docs/config
 
 const devEnv = {
-  SERVER_BASE_URL: 'http://localhost:5000',
+  SERVER_BASE_URL: 'http://localhost.usask.ca:5000',
 };
 
 const prodEnv = {

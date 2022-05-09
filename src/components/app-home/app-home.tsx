@@ -24,18 +24,7 @@ export class AppHome implements ComponentInterface {
   @State() scriptOutput = '';
 
   async componentDidLoad() {
-    const ticketMatch = window.location.href.match(/\?ticket=ST-.+-cas/);
-    if (ticketMatch) {
-      const [_, ticket] = ticketMatch[0].split('ticket=');
-      const service = encodeURIComponent(window.location.origin + '/');
-      const response = await fetch(`${Env.SERVER_BASE_URL}/auth/validate?service=${service}&ticket=${ticket}`);
-      if (response.ok) {
-        sessionStorage.setItem('NSID', await response.text());
-        window.location.href = window.location.href.split('?ticket=')[0];
-      } else {
-        sessionStorage.removeItem('NSID');
-      }
-    }
+    await this.checkPAWSLogin();
 
     await this.fetchFileTree();
     await this.fetchUser();
@@ -52,6 +41,7 @@ export class AppHome implements ComponentInterface {
             <ion-buttons slot="end">
               <ion-button
                 title={this.user ? 'Sign out' : 'Sign in'}
+                href={this.user ? undefined : `https://cas.usask.ca/cas/login?service=${encodeURIComponent(window.location.origin + '/')}`}
                 onClick={async () => {
                   if (this.user) {
                     await fetch(`${Env.SERVER_BASE_URL}/auth/sign-out`, {
@@ -59,28 +49,11 @@ export class AppHome implements ComponentInterface {
                       credentials: 'include',
                     });
                     this.fetchUser();
-                  } else {
-                    const popover = await popoverController.create({
-                      component: 'app-sign-in',
-                      translucent: true,
-                      id: 'sign-in',
-                    });
-                    popover.addEventListener('ionPopoverDidDismiss', () => this.fetchUser());
-                    await popover.present();
+                    window.location.href = `https://cas.usask.ca/cas/logout?service=${encodeURIComponent(window.location.origin + '/')}`;
                   }
                 }}
               >
                 <ion-icon name={this.user ? 'log-out' : 'log-in'} slot="icon-only" />
-              </ion-button>
-              <ion-button
-                href={
-                  sessionStorage.getItem('NSID')
-                    ? `https://cas.usask.ca/cas/logout?service=${encodeURIComponent(window.location.origin + '/')}`
-                    : `https://cas.usask.ca/cas/login?service=${encodeURIComponent(window.location.origin + '/')}`
-                }
-                onClick={() => sessionStorage.getItem('NSID') && sessionStorage.removeItem('NSID')}
-              >
-                {sessionStorage.getItem('NSID') || 'Test NSID login'}
               </ion-button>
             </ion-buttons>
           </ion-toolbar>
@@ -256,6 +229,16 @@ export class AppHome implements ComponentInterface {
         />
       </ion-list>
     );
+  }
+
+  private async checkPAWSLogin() {
+    const ticketMatch = window.location.href.match(/\?ticket=ST-.+-cas/);
+    if (ticketMatch) {
+      const [_, ticket] = ticketMatch[0].split('ticket=');
+      const service = encodeURIComponent(window.location.origin + '/');
+      await fetch(`${Env.SERVER_BASE_URL}/auth/sign-in?service=${service}&ticket=${ticket}`, { method: 'POST', credentials: 'include' });
+      window.location.href = window.location.href.split('?ticket=')[0];
+    }
   }
 
   private async fetchFileTree() {
