@@ -40,7 +40,9 @@ export class AppHome implements ComponentInterface {
             <ion-buttons slot="end">
               <ion-button
                 title={this.user ? 'Sign out' : 'Sign in'}
-                href={this.user ? undefined : `https://cas.usask.ca/cas/login?service=${encodeURIComponent(window.location.href + window.location.href.endsWith('/') ? '' : '/')}`}
+                href={
+                  this.user ? undefined : `https://cas.usask.ca/cas/login?service=${encodeURIComponent(window.location.href + (window.location.href.endsWith('/') ? '' : '/'))}`
+                }
                 onClick={async () => {
                   if (this.user) {
                     await fetch(`${Env.SERVER_BASE_URL}/auth/sign-out`, {
@@ -48,7 +50,7 @@ export class AppHome implements ComponentInterface {
                       credentials: 'include',
                     });
                     this.fetchUser();
-                    window.location.href = `https://cas.usask.ca/cas/logout?service=${encodeURIComponent(window.location.href + window.location.href.endsWith('/') ? '' : '/')}`;
+                    window.location.href = `https://cas.usask.ca/cas/logout?service=${encodeURIComponent(window.location.href + (window.location.href.endsWith('/') ? '' : '/'))}`;
                   }
                 }}
               >
