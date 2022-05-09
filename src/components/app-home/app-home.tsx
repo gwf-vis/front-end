@@ -236,7 +236,7 @@ export class AppHome implements ComponentInterface {
     const ticketMatch = window.location.href.match(/\?ticket=ST-.+-cas/);
     if (ticketMatch) {
       const [_, ticket] = ticketMatch[0].split('ticket=');
-      const service = encodeURIComponent(window.location.origin + '/');
+      const service = encodeURIComponent(window.location.href + (window.location.href.endsWith('/') ? '' : '/'));
       await fetch(`${Env.SERVER_BASE_URL}/auth/sign-in?service=${service}&ticket=${ticket}`, { method: 'POST', credentials: 'include' });
       window.location.href = window.location.href.split('?ticket=')[0];
     }
