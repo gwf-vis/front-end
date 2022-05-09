@@ -1,7 +1,6 @@
 import { Component, ComponentInterface, Env, h, Host, State } from '@stencil/core';
 import '@seanwong24/s-monaco-editor';
 import { TreeNode } from '../app-tree-view/app-tree-view';
-import { popoverController } from '@ionic/core';
 
 export interface User {
   username: string;
