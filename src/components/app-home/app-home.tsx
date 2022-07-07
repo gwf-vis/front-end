@@ -35,7 +35,9 @@ export class AppHome implements ComponentInterface {
       <Host>
         <ion-header>
           <ion-toolbar color="primary">
-            <ion-title>Advanced Vis</ion-title>
+            <ion-title>
+              <img src="./assets/icon/gwf-simple-horizontal.svg" style={{maxHeight: '48px', contentFit: 'cover'}}></img>
+            </ion-title>
             <ion-text slot="end">{this.user?.username || 'Guest'}</ion-text>
             <ion-buttons slot="end">
               <ion-button
