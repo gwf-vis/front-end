@@ -21,6 +21,10 @@ export namespace Components {
         "visId": string;
     }
 }
+export interface AppTreeViewCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLAppTreeViewElement;
+}
 declare global {
     interface HTMLAppHomeElement extends Components.AppHome, HTMLStencilElement {
     }
@@ -69,8 +73,8 @@ declare namespace LocalJSX {
     }
     interface AppTreeView {
         "data"?: TreeNode;
-        "onItemClicked"?: (event: CustomEvent<TreeNode>) => void;
-        "onItemRightClicked"?: (event: CustomEvent<TreeNode>) => void;
+        "onItemClicked"?: (event: AppTreeViewCustomEvent<TreeNode>) => void;
+        "onItemRightClicked"?: (event: AppTreeViewCustomEvent<TreeNode>) => void;
     }
     interface AppVis {
         "pluginUrl"?: string;
