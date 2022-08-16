@@ -36,7 +36,7 @@ export class AppHome implements ComponentInterface {
         <ion-header>
           <ion-toolbar color="primary">
             <ion-title>
-              <img src="./assets/icon/gwf-simple-horizontal.svg" style={{maxHeight: '48px', contentFit: 'cover'}}></img>
+              <img src="./assets/icon/gwf-simple-horizontal.svg" style={{ maxHeight: '48px', contentFit: 'cover' }}></img>
             </ion-title>
             <ion-text slot="end">{this.user?.username || 'Guest'}</ion-text>
             <ion-buttons slot="end">
@@ -178,7 +178,7 @@ export class AppHome implements ComponentInterface {
         data={scriptsTree}
         onItemClicked={async ({ detail }) => {
           if (!detail.children) {
-            const rootPath = `${this.fileTree.name}/`;
+            const rootPath = `${this.fileTree.path}/`;
             const path = detail.path?.slice(rootPath.length);
             const fileContent = await this.fetchFileContent(path);
             if (this.monacoEditorElement) {
@@ -246,13 +246,17 @@ export class AppHome implements ComponentInterface {
   }
 
   private async fetchFileTree() {
-    const response = await fetch(`${Env.SERVER_BASE_URL}/file/tree`, { credentials: 'include' });
-    const fileTree = await response.json();
-    this.fileTree = fileTree;
+    try {
+      const response = await fetch(`${Env.SERVER_BASE_URL}/file/tree`, { credentials: 'include' });
+      const fileTree = await response.json();
+      this.fileTree = fileTree;
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   private async fetchFileContent(path: string) {
-    const response = await fetch(`${Env.SERVER_BASE_URL}/files/${path}`, { credentials: 'include' });
+    const response = await fetch(`${Env.SERVER_BASE_URL}/file/fetch/${path}`, { credentials: 'include' });
     const text = await response.text();
     return text;
   }
