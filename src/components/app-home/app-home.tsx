@@ -229,6 +229,25 @@ export class AppHome implements ComponentInterface {
               this.selectedFilePath = path;
             }
           }}
+          onItemRightClicked={({ detail }) => {
+            debugger;
+            if (detail.editable) {
+              if (detail.children) {
+                const fileName = prompt('Creating a new file');
+                const rootPath = `${this.fileTree.path}/`;
+                const filePath = `${detail.path?.slice(rootPath.length)}/${fileName}`;
+                if (filePath !== null) {
+                  this.createFile(filePath, '');
+                }
+              } else {
+                if (confirm(`Delete ${detail.name}?`)) {
+                  const rootPath = `${this.fileTree.path}/`;
+                  const filePath = detail.path?.slice(rootPath.length);
+                  this.deleteFile(filePath);
+                }
+              }
+            }
+          }}
         />
       </ion-list>
     );
@@ -309,7 +328,6 @@ export class AppHome implements ComponentInterface {
   }
 
   private async updateFile(path: string, content: string) {
-    debugger;
     await fetch(`${Env.SERVER_BASE_URL}/file?path=${path}`, {
       method: 'PUT',
       headers: {
