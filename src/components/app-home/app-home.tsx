@@ -224,7 +224,7 @@ export class AppHome implements ComponentInterface {
               if (this.monacoEditorElement) {
                 this.monacoEditorElement.value = fileContent;
                 // TODO detect language
-                this.monacoEditorElement.language = 'python';
+                this.monacoEditorElement.language = path.split('.').pop() === 'js' ? 'javascript' : 'python';
               }
               this.selectedFilePath = path;
             }
