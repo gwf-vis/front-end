@@ -161,14 +161,7 @@ export class AppHome implements ComponentInterface {
   }
 
   private renderScriptsView() {
-    const children = this.fileTree?.children?.map(child => {
-      const editable = child.name === this.user?.username;
-      return {
-        name: child.name,
-        children: child?.children?.map(child => ({ ...child, editable })),
-        editable,
-      };
-    });
+    const children = this.fileTree?.children;;
     const scriptsTree = {
       name: 'root',
       children: children,
@@ -230,7 +223,6 @@ export class AppHome implements ComponentInterface {
             }
           }}
           onItemRightClicked={({ detail }) => {
-            debugger;
             if (detail.editable) {
               if (detail.children) {
                 const fileName = prompt('Creating a new file');
@@ -268,10 +260,19 @@ export class AppHome implements ComponentInterface {
     try {
       const response = await fetch(`${Env.SERVER_BASE_URL}/file/tree`, { credentials: 'include' });
       const fileTree = await response.json();
+      fileTree?.children?.forEach(userDirectoryFileTree => this.setFileTreeEditable(userDirectoryFileTree, userDirectoryFileTree.name === this.user?.username));
       this.fileTree = fileTree;
     } catch (e) {
       console.log(e);
     }
+  }
+
+  private async setFileTreeEditable(tree: any, editable: boolean) {
+    if (!tree) {
+      return;
+    }
+    tree.editable = editable;
+    tree.children?.forEach(child => this.setFileTreeEditable(child, editable));
   }
 
   private async fetchFileContent(path: string) {
