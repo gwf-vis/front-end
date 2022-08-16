@@ -218,7 +218,7 @@ export class AppHome implements ComponentInterface {
           data={this.fileTree}
           onItemClicked={async ({ detail }) => {
             if (!detail.children) {
-              const rootPath = `${this.fileTree.name}/`;
+              const rootPath = `${this.fileTree.path}/`;
               const path = detail.path?.slice(rootPath.length);
               const fileContent = await this.fetchFileContent(path);
               if (this.monacoEditorElement) {
