@@ -162,10 +162,11 @@ export class AppHome implements ComponentInterface {
 
   private renderScriptsView() {
     const children = this.fileTree?.children?.map(child => {
+      debugger
       const editable = child.name === this.user?.username;
       return {
         name: child.name,
-        children: child?.children?.find(child => child.name === 'scripts')?.children?.map(child => ({ ...child, editable })),
+        children: child?.children?.map(child => ({ ...child, editable })),
         editable,
       };
     });
