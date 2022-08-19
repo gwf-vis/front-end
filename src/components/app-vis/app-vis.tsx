@@ -12,10 +12,11 @@ export class AppVis implements ComponentInterface {
   @State() data: any;
 
   @Prop() pluginUrl = `${Env.SERVER_BASE_URL}/files/public/plugins/vis-main`;
+  @Prop() user: string;
   @Prop() visId: string;
 
   async componentDidLoad() {
-    this.data = await (await fetch(`${Env.SERVER_BASE_URL}/file/vis?id=${this.visId}`)).json();
+    this.data = await (await fetch(`${Env.SERVER_BASE_URL}/file/vis?user=${this.user}&id=${this.visId}`)).json();
   }
 
   render() {

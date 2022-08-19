@@ -11,7 +11,7 @@ export class AppRoot {
       <ion-app>
         <ion-router useHash={true}>
           <ion-route url="/" component="app-home" />
-          <ion-route url="/vis/:visId" component="app-vis" />
+          <ion-route url="/vis/:user/:visId" component="app-vis" />
         </ion-router>
         <ion-nav />
       </ion-app>

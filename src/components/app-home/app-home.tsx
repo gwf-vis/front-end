@@ -100,6 +100,7 @@ export class AppHome implements ComponentInterface {
                             onClick={async () => {
                               const response = await fetch(`${Env.SERVER_BASE_URL}/file/run`, {
                                 method: 'POST',
+                                credentials: 'include',
                                 headers: {
                                   'Content-Type': 'application/json',
                                 },
@@ -112,7 +113,7 @@ export class AppHome implements ComponentInterface {
                                 const id = data.id;
                                 this.scriptOutput += '\n' + data.output;
                                 if (data.result) {
-                                  window.open('./#/vis/' + id);
+                                  window.open(`./#/vis/${this.user?.username || ''}/${id}`);
                                 }
                               }
                             }}
@@ -161,7 +162,7 @@ export class AppHome implements ComponentInterface {
   }
 
   private renderScriptsView() {
-    const children = this.fileTree?.children;;
+    const children = this.fileTree?.children;
     const scriptsTree = {
       name: 'root',
       children: children,
