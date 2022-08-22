@@ -16,7 +16,6 @@ export class AppHome implements ComponentInterface {
   private monacoEditorElement: HTMLSMonacoEditorElement;
 
   @State() fileTree: TreeNode;
-  @State() datasetTree: TreeNode;
   @State() user: User;
   @State() selectedFilePath: string;
   @State() selectedTab = 'scripts';
@@ -27,7 +26,6 @@ export class AppHome implements ComponentInterface {
 
     await this.fetchFileTree();
     await this.fetchUser();
-    await this.fetchDatasetTree();
   }
 
   render() {
@@ -163,13 +161,16 @@ export class AppHome implements ComponentInterface {
 
   private renderScriptsView() {
     const children = this.fileTree?.children;
-    const scriptsTree = {
+    const scriptTree = {
       name: 'root',
-      children: children,
+      children: children?.map(child => ({
+        name: child.name,
+        children: child.children?.find(child => child.name === 'scripts')?.children,
+      })),
     };
     return (
       <app-tree-view
-        data={scriptsTree}
+        data={scriptTree}
         onItemClicked={async ({ detail }) => {
           if (!detail.children) {
             const rootPath = `${this.fileTree.path}/`;
@@ -202,7 +203,15 @@ export class AppHome implements ComponentInterface {
   }
 
   private renderDatasetsView() {
-    return <app-tree-view data={this.datasetTree} onItemClicked={({ detail }) => !detail.children && alert(detail['description'])} />;
+    const children = this.fileTree?.children;
+    const datasetTree = {
+      name: 'root',
+      children: children?.map(child => ({
+        name: child.name,
+        children: child.children?.find(child => child.name === 'datasets')?.children,
+      })),
+    };
+    return <app-tree-view data={datasetTree} />;
   }
 
   private renderFilesView() {
@@ -290,31 +299,6 @@ export class AppHome implements ComponentInterface {
       this.user = undefined;
     }
     this.fetchFileTree();
-  }
-
-  private async fetchDatasetTree() {
-    const children = await Promise.all(
-      this.fileTree?.children?.map(async rootChild => ({
-        name: rootChild.name,
-        children: await Promise.all(
-          rootChild?.children
-            ?.find(child => child.name === 'data')
-            ?.children?.map(async child => {
-              const datasetInfo = JSON.parse(await this.fetchFileContent(`${rootChild.name}/data/${child.name}/index.json`));
-              return {
-                name: child.name,
-                children: datasetInfo.variables,
-              };
-            })
-            .filter(Boolean) || [],
-        ),
-      })),
-    );
-    const datasetTree = {
-      name: 'root',
-      children,
-    };
-    this.datasetTree = datasetTree;
   }
 
   private async createFile(path: string, content: string) {
