@@ -13,6 +13,12 @@ export interface User {
   scoped: true,
 })
 export class AppHome implements ComponentInterface {
+  private readonly EXTENSION_NAME_AND_LANGUAGE_DICT = {
+    js: 'javascript',
+    py: 'python',
+    json: 'json',
+  };
+
   private monacoEditorElement: HTMLSMonacoEditorElement;
 
   @State() fileTree: TreeNode;
@@ -180,8 +186,7 @@ export class AppHome implements ComponentInterface {
             const fileContent = await this.fetchFileContent(path);
             if (this.monacoEditorElement) {
               this.monacoEditorElement.value = fileContent;
-              // TODO detect language
-              this.monacoEditorElement.language = path.split('.').pop() === 'js' ? 'javascript' : 'python';
+              this.monacoEditorElement.language = this.EXTENSION_NAME_AND_LANGUAGE_DICT[path.split('.').pop()];
             }
             this.selectedFilePath = path;
           }
@@ -235,8 +240,7 @@ export class AppHome implements ComponentInterface {
             const fileContent = await this.fetchFileContent(path);
             if (this.monacoEditorElement) {
               this.monacoEditorElement.value = fileContent;
-              // TODO detect language
-              this.monacoEditorElement.language = path.split('.').pop() === 'js' ? 'javascript' : 'python';
+              this.monacoEditorElement.language = this.EXTENSION_NAME_AND_LANGUAGE_DICT[path.split('.').pop()];
             }
             this.selectedFilePath = path;
           }
@@ -271,8 +275,7 @@ export class AppHome implements ComponentInterface {
               const fileContent = await this.fetchFileContent(path);
               if (this.monacoEditorElement) {
                 this.monacoEditorElement.value = fileContent;
-                // TODO detect language
-                this.monacoEditorElement.language = path.split('.').pop() === 'js' ? 'javascript' : 'python';
+                this.monacoEditorElement.language = this.EXTENSION_NAME_AND_LANGUAGE_DICT[path.split('.').pop()];
               }
               this.selectedFilePath = path;
             }
