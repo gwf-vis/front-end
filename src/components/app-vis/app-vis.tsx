@@ -20,6 +20,6 @@ export class AppVis implements ComponentInterface {
   }
 
   render() {
-    return <Host>{this.data && <gwf-vis-host {...this.data}></gwf-vis-host>}</Host>;
+    return <Host>{this.data && <gwf-vis-host serverFileApiBasePath={`${Env.SERVER_BASE_URL}/file/fetch`} {...this.data}></gwf-vis-host>}</Host>;
   }
 }

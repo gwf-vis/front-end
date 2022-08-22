@@ -26,6 +26,6 @@
   "dependencies": {
     "@ionic/core": "^6.0.0",
     "@seanwong24/s-monaco-editor": "^0.2.0",
-    "gwf-vis-host": "github:river-flow-vis/gwf-vis-host#f8715b1458eea7d2707ecddbf006ebe398a3b29a"
+    "gwf-vis-host": "github:river-flow-vis/gwf-vis-host#bccd3da8b67abc355f47cc21a4aee020f5aa47c8"
   }
 }
