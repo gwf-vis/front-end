@@ -113,7 +113,7 @@ export class AppHome implements ComponentInterface {
                                 const id = data.id;
                                 this.scriptOutput += '\n' + data.output;
                                 if (data.result) {
-                                  window.open(`./#/vis/${this.user?.username || ''}/${id}`);
+                                  window.open(`./#/vis/${this.user?.username || 'guest'}/${id}`);
                                 }
                               }
                             }}
