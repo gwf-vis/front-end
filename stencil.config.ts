@@ -7,7 +7,7 @@ const devEnv = {
 };
 
 const prodEnv = {
-  SERVER_BASE_URL: './api',
+  SERVER_BASE_URL: '/RiverFlow/api',
 };
 
 export const config: Config = {
