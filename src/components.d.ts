@@ -18,6 +18,7 @@ export namespace Components {
     }
     interface AppVis {
         "pluginUrl": string;
+        "user": string;
         "visId": string;
     }
 }
@@ -78,6 +79,7 @@ declare namespace LocalJSX {
     }
     interface AppVis {
         "pluginUrl"?: string;
+        "user"?: string;
         "visId"?: string;
     }
     interface IntrinsicElements {

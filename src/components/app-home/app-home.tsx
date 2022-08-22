@@ -1,6 +1,7 @@
 import { Component, ComponentInterface, Env, h, Host, State } from '@stencil/core';
 import '@seanwong24/s-monaco-editor';
 import { TreeNode } from '../app-tree-view/app-tree-view';
+import defaultPythonScript from './default_python_script.txt';
 
 export interface User {
   username: string;
@@ -172,6 +173,7 @@ export class AppHome implements ComponentInterface {
     const scriptTree = {
       name: 'root',
       children: children?.map(child => ({
+        ...child,
         name: child.name,
         children: child.children?.find(child => child.name === 'scripts')?.children,
       })),
@@ -196,7 +198,7 @@ export class AppHome implements ComponentInterface {
             if (detail.children) {
               const fileName = prompt('Creating a new file');
               if (fileName !== null) {
-                this.createFile(`${this.user?.username}/scripts/${fileName}`, '');
+                this.createFile(`${this.user?.username}/scripts/${fileName}`, defaultPythonScript);
               }
             } else {
               if (confirm(`Delete ${detail.name}?`)) {
@@ -214,6 +216,7 @@ export class AppHome implements ComponentInterface {
     const datasetTree = {
       name: 'root',
       children: children?.map(child => ({
+        ...child,
         name: child.name,
         children: child.children?.find(child => child.name === 'datasets')?.children,
       })),
@@ -226,6 +229,7 @@ export class AppHome implements ComponentInterface {
     const pluginTree = {
       name: 'root',
       children: children?.map(child => ({
+        ...child,
         name: child.name,
         children: child.children?.find(child => child.name === 'plugins')?.children,
       })),
@@ -250,11 +254,11 @@ export class AppHome implements ComponentInterface {
             if (detail.children) {
               const fileName = prompt('Creating a new file');
               if (fileName !== null) {
-                this.createFile(`${this.user?.username}/scripts/${fileName}`, '');
+                this.createFile(`${this.user?.username}/plugins/${fileName}`, '');
               }
             } else {
               if (confirm(`Delete ${detail.name}?`)) {
-                this.deleteFile(`${this.user?.username}/scripts/${detail.name}`);
+                this.deleteFile(`${this.user?.username}/plugins/${detail.name}`);
               }
             }
           }
@@ -349,7 +353,7 @@ export class AppHome implements ComponentInterface {
     this.fetchFileTree();
   }
 
-  private async createFile(path: string, content: string) {
+  private async createFile(path: string, content: string = '') {
     await fetch(`${Env.SERVER_BASE_URL}/file?path=${path}`, {
       method: 'POST',
       headers: {
