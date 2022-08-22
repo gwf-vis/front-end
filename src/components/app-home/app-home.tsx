@@ -71,12 +71,14 @@ export class AppHome implements ComponentInterface {
                         <ion-segment scrollable value={this.selectedTab} onIonChange={({ detail }) => (this.selectedTab = detail.value)}>
                           <ion-segment-button value="scripts">Scripts</ion-segment-button>
                           <ion-segment-button value="datasets">Datasets</ion-segment-button>
+                          <ion-segment-button value="plugins">Plugins</ion-segment-button>
                           <ion-segment-button value="files">Files</ion-segment-button>
                         </ion-segment>
                       </ion-toolbar>
                       <ion-card-content>
                         {this.selectedTab === 'scripts' && this.renderScriptsView()}
                         {this.selectedTab === 'datasets' && this.renderDatasetsView()}
+                        {this.selectedTab === 'plugins' && this.renderPluginsView()}
                         {this.selectedTab === 'files' && this.renderFilesView()}
                       </ion-card-content>
                     </ion-card>
@@ -212,6 +214,49 @@ export class AppHome implements ComponentInterface {
       })),
     };
     return <app-tree-view data={datasetTree} />;
+  }
+
+  private renderPluginsView() {
+    const children = this.fileTree?.children;
+    const pluginTree = {
+      name: 'root',
+      children: children?.map(child => ({
+        name: child.name,
+        children: child.children?.find(child => child.name === 'plugins')?.children,
+      })),
+    };
+    return (
+      <app-tree-view
+        data={pluginTree}
+        onItemClicked={async ({ detail }) => {
+          if (!detail.children) {
+            const rootPath = `${this.fileTree.path}/`;
+            const path = detail.path?.slice(rootPath.length);
+            const fileContent = await this.fetchFileContent(path);
+            if (this.monacoEditorElement) {
+              this.monacoEditorElement.value = fileContent;
+              // TODO detect language
+              this.monacoEditorElement.language = path.split('.').pop() === 'js' ? 'javascript' : 'python';
+            }
+            this.selectedFilePath = path;
+          }
+        }}
+        onItemRightClicked={({ detail }) => {
+          if (detail.editable) {
+            if (detail.children) {
+              const fileName = prompt('Creating a new file');
+              if (fileName !== null) {
+                this.createFile(`${this.user?.username}/scripts/${fileName}`, '');
+              }
+            } else {
+              if (confirm(`Delete ${detail.name}?`)) {
+                this.deleteFile(`${this.user?.username}/scripts/${detail.name}`);
+              }
+            }
+          }
+        }}
+      />
+    );
   }
 
   private renderFilesView() {
