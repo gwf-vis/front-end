@@ -130,7 +130,7 @@ export class AppHome implements ComponentInterface {
                           <ion-button title="Clear">
                             <ion-icon slot="icon-only" name="trash"></ion-icon>
                           </ion-button>
-                          <ion-button title="Documentation">
+                          <ion-button title="Documentation" href="https://hackmd.io/@aqKO5XToRje4bSvbv6f4EQ/BJ3vRuzys">
                             <ion-icon slot="icon-only" name="help"></ion-icon>
                           </ion-button>
                         </ion-buttons>
