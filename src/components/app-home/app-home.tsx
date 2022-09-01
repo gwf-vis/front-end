@@ -2,6 +2,7 @@ import { Component, ComponentInterface, Env, h, Host, State } from '@stencil/cor
 import '@seanwong24/s-monaco-editor';
 import { TreeNode } from '../app-tree-view/app-tree-view';
 import defaultPythonScript from './default_python_script.txt';
+import { obtainDbInfo } from './obtain-db-info';
 
 export interface User {
   username: string;
@@ -221,7 +222,25 @@ export class AppHome implements ComponentInterface {
         children: child.children?.find(child => child.name === 'datasets')?.children,
       })),
     };
-    return <app-tree-view data={datasetTree} />;
+    return (
+      <app-tree-view
+        data={datasetTree}
+        onItemClicked={async ({ detail }) => {
+          if (!detail.children) {
+            const rootPath = `${this.fileTree.path}/`;
+            const path = detail.path?.slice(rootPath.length);
+            const response = await fetch(`${Env.SERVER_BASE_URL}/file/fetch/${path}`, { credentials: 'include' });
+            const dbBuffer = await response.arrayBuffer();
+            const dbInfo = await obtainDbInfo(dbBuffer);
+            if (this.monacoEditorElement) {
+              this.monacoEditorElement.value = dbInfo;
+              this.monacoEditorElement.language = 'text';
+            }
+            this.selectedFilePath = path;
+          }
+        }}
+      />
+    );
   }
 
   private renderPluginsView() {
