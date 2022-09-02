@@ -4,7 +4,7 @@ import gwfvis
 vis_config = gwfvis.load_vis_config()
 
 # add a default map layer
-gwfvis.add_plugin(vis_config, gwfvis.SATELITTE_LAYER)
+gwfvis.add_map_element(vis_config, 'tile-layer', gwfvis.SATELITTE_LAYER_PROPS)
 
 # set a view for the map
 vis_config['view'] = {
