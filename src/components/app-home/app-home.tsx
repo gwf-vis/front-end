@@ -3,6 +3,7 @@ import '@seanwong24/s-monaco-editor';
 import { TreeNode } from '../app-tree-view/app-tree-view';
 import defaultPythonScript from './default_python_script.txt';
 import { obtainDbInfo } from './obtain-db-info';
+import { alertController } from '@ionic/core';
 
 export interface User {
   username: string;
@@ -290,7 +291,12 @@ export class AppHome implements ComponentInterface {
     return (
       <ion-list>
         <app-tree-view
-          data={this.fileTree}
+          data={
+            this.fileTree ||
+            JSON.parse(
+              `{"path":"/home/node/dist/files","name":"files","children":[{"path":"/home/node/dist/files/public","name":"public","children":[{"path":"/home/node/dist/files/public/assets","name":"assets","children":[]},{"path":"/home/node/dist/files/public/datasets","name":"datasets","children":[{"path":"/home/node/dist/files/public/datasets/airbnb.gwfvisdb","name":"airbnb.gwfvisdb"},{"path":"/home/node/dist/files/public/datasets/catchment.gwfvisdb","name":"catchment.gwfvisdb"},{"path":"/home/node/dist/files/public/datasets/chm_1000.gwfvisdb","name":"chm_1000.gwfvisdb"},{"path":"/home/node/dist/files/public/datasets/chm_100000.gwfvisdb","name":"chm_100000.gwfvisdb"},{"path":"/home/node/dist/files/public/datasets/mesh.gwfvisdb","name":"mesh.gwfvisdb"}]},{"path":"/home/node/dist/files/public/plugins","name":"plugins","children":[{"path":"/home/node/dist/files/public/plugins/default","name":"default","children":[{"path":"/home/node/dist/files/public/plugins/default/gwf-vis-plugin-data-fetcher.js","name":"gwf-vis-plugin-data-fetcher.js"},{"path":"/home/node/dist/files/public/plugins/default/gwf-vis-plugin-dimension-control.js","name":"gwf-vis-plugin-dimension-control.js"},{"path":"/home/node/dist/files/public/plugins/default/gwf-vis-plugin-geojson-layer.js","name":"gwf-vis-plugin-geojson-layer.js"},{"path":"/home/node/dist/files/public/plugins/default/gwf-vis-plugin-legend.js","name":"gwf-vis-plugin-legend.js"},{"path":"/home/node/dist/files/public/plugins/default/gwf-vis-plugin-line-chart.js","name":"gwf-vis-plugin-line-chart.js"},{"path":"/home/node/dist/files/public/plugins/default/gwf-vis-plugin-metadata.js","name":"gwf-vis-plugin-metadata.js"},{"path":"/home/node/dist/files/public/plugins/default/gwf-vis-plugin-radar-chart.js","name":"gwf-vis-plugin-radar-chart.js"},{"path":"/home/node/dist/files/public/plugins/default/gwf-vis-plugin-selection.js","name":"gwf-vis-plugin-selection.js"},{"path":"/home/node/dist/files/public/plugins/default/gwf-vis-plugin-tile-layer.js","name":"gwf-vis-plugin-tile-layer.js"},{"path":"/home/node/dist/files/public/plugins/default/gwf-vis-plugin-variable-control.js","name":"gwf-vis-plugin-variable-control.js"},{"path":"/home/node/dist/files/public/plugins/default/index.js","name":"index.js"},{"path":"/home/node/dist/files/public/plugins/default/p-2b42538a.js","name":"p-2b42538a.js"},{"path":"/home/node/dist/files/public/plugins/default/p-3cb4e4d7.js","name":"p-3cb4e4d7.js"},{"path":"/home/node/dist/files/public/plugins/default/p-5ed12820.js","name":"p-5ed12820.js"},{"path":"/home/node/dist/files/public/plugins/default/p-9ae2d10a.js","name":"p-9ae2d10a.js"}]},{"path":"/home/node/dist/files/public/plugins/sample","name":"sample","children":[{"path":"/home/node/dist/files/public/plugins/sample/sample-plugin.js","name":"sample-plugin.js"}]}]},{"path":"/home/node/dist/files/public/scripts","name":"scripts","children":[{"path":"/home/node/dist/files/public/scripts/catchment.py","name":"catchment.py"},{"path":"/home/node/dist/files/public/scripts/chm.py","name":"chm.py"},{"path":"/home/node/dist/files/public/scripts/color_config.py","name":"color_config.py"},{"path":"/home/node/dist/files/public/scripts/line-chart.py","name":"line-chart.py"},{"path":"/home/node/dist/files/public/scripts/mesh.py","name":"mesh.py"},{"path":"/home/node/dist/files/public/scripts/metadata.py","name":"metadata.py"},{"path":"/home/node/dist/files/public/scripts/multi-line-chart.py","name":"multi-line-chart.py"},{"path":"/home/node/dist/files/public/scripts/multiselect.py","name":"multiselect.py"},{"path":"/home/node/dist/files/public/scripts/polygons.py","name":"polygons.py"},{"path":"/home/node/dist/files/public/scripts/radar-chart.py","name":"radar-chart.py"},{"path":"/home/node/dist/files/public/scripts/series_data.py","name":"series_data.py"},{"path":"/home/node/dist/files/public/scripts/welcome.py","name":"welcome.py"}]}]},{"path":"/home/node/dist/files/shw940","name":"shw940","children":[{"path":"/home/node/dist/files/shw940/datasets","name":"datasets","children":[]},{"path":"/home/node/dist/files/shw940/history","name":"history","children":[{"path":"/home/node/dist/files/shw940/history/1661206762991.json","name":"1661206762991.json"},{"path":"/home/node/dist/files/shw940/history/1661207432371.json","name":"1661207432371.json"},{"path":"/home/node/dist/files/shw940/history/1661207931949.json","name":"1661207931949.json"},{"path":"/home/node/dist/files/shw940/history/1661208134111.json","name":"1661208134111.json"},{"path":"/home/node/dist/files/shw940/history/1661210552894.json","name":"1661210552894.json"},{"path":"/home/node/dist/files/shw940/history/1661210572620.json","name":"1661210572620.json"},{"path":"/home/node/dist/files/shw940/history/1661210656279.json","name":"1661210656279.json"},{"path":"/home/node/dist/files/shw940/history/1661212137993.json","name":"1661212137993.json"},{"path":"/home/node/dist/files/shw940/history/1661275639389.json","name":"1661275639389.json"},{"path":"/home/node/dist/files/shw940/history/1661276204918.json","name":"1661276204918.json"},{"path":"/home/node/dist/files/shw940/history/1661280170120.json","name":"1661280170120.json"},{"path":"/home/node/dist/files/shw940/history/1661280418345.json","name":"1661280418345.json"},{"path":"/home/node/dist/files/shw940/history/1661280744062.json","name":"1661280744062.json"},{"path":"/home/node/dist/files/shw940/history/1661280887183.json","name":"1661280887183.json"},{"path":"/home/node/dist/files/shw940/history/1661280902950.json","name":"1661280902950.json"},{"path":"/home/node/dist/files/shw940/history/1662057264936.json","name":"1662057264936.json"},{"path":"/home/node/dist/files/shw940/history/1662057774673.json","name":"1662057774673.json"},{"path":"/home/node/dist/files/shw940/history/1662057814732.json","name":"1662057814732.json"},{"path":"/home/node/dist/files/shw940/history/1662057845936.json","name":"1662057845936.json"},{"path":"/home/node/dist/files/shw940/history/1662057909940.json","name":"1662057909940.json"},{"path":"/home/node/dist/files/shw940/history/1662058178330.json","name":"1662058178330.json"},{"path":"/home/node/dist/files/shw940/history/1662058839120.json","name":"1662058839120.json"},{"path":"/home/node/dist/files/shw940/history/1662058881284.json","name":"1662058881284.json"},{"path":"/home/node/dist/files/shw940/history/1662058945200.json","name":"1662058945200.json"},{"path":"/home/node/dist/files/shw940/history/1662058970938.json","name":"1662058970938.json"},{"path":"/home/node/dist/files/shw940/history/1662059009811.json","name":"1662059009811.json"},{"path":"/home/node/dist/files/shw940/history/1662135864772.json","name":"1662135864772.json"},{"path":"/home/node/dist/files/shw940/history/1662136065759.json","name":"1662136065759.json"},{"path":"/home/node/dist/files/shw940/history/1662136208738.json","name":"1662136208738.json"},{"path":"/home/node/dist/files/shw940/history/1662136319395.json","name":"1662136319395.json"},{"path":"/home/node/dist/files/shw940/history/1662136356738.json","name":"1662136356738.json"},{"path":"/home/node/dist/files/shw940/history/1662136494501.json","name":"1662136494501.json"},{"path":"/home/node/dist/files/shw940/history/1662136672399.json","name":"1662136672399.json"},{"path":"/home/node/dist/files/shw940/history/1662137350122.json","name":"1662137350122.json"},{"path":"/home/node/dist/files/shw940/history/1662137366441.json","name":"1662137366441.json"},{"path":"/home/node/dist/files/shw940/history/1662137475725.json","name":"1662137475725.json"},{"path":"/home/node/dist/files/shw940/history/1662137517810.json","name":"1662137517810.json"},{"path":"/home/node/dist/files/shw940/history/1662137548519.json","name":"1662137548519.json"},{"path":"/home/node/dist/files/shw940/history/1662137745071.json","name":"1662137745071.json"},{"path":"/home/node/dist/files/shw940/history/1662137763044.json","name":"1662137763044.json"},{"path":"/home/node/dist/files/shw940/history/1662137844561.json","name":"1662137844561.json"},{"path":"/home/node/dist/files/shw940/history/1662141733897.json","name":"1662141733897.json"},{"path":"/home/node/dist/files/shw940/history/1662141768597.json","name":"1662141768597.json"}]},{"path":"/home/node/dist/files/shw940/plugins","name":"plugins","children":[{"path":"/home/node/dist/files/shw940/plugins/my-plugin.js","name":"my-plugin.js"}]},{"path":"/home/node/dist/files/shw940/scripts","name":"scripts","children":[{"path":"/home/node/dist/files/shw940/scripts/test.py","name":"test.py"}]}]}]}`,
+            )
+          }
           onItemClicked={async ({ detail }) => {
             if (!detail.children) {
               const rootPath = `${this.fileTree.path}/`;
@@ -303,15 +309,49 @@ export class AppHome implements ComponentInterface {
               this.selectedFilePath = path;
             }
           }}
-          onItemRightClicked={({ detail }) => {
+          onItemRightClicked={async ({ detail }) => {
             if (detail.editable) {
               if (detail.children) {
-                const fileName = prompt('Creating a new file');
-                const rootPath = `${this.fileTree.path}/`;
-                const filePath = `${detail.path?.slice(rootPath.length)}/${fileName}`;
-                if (filePath !== null) {
-                  this.createFile(filePath, '');
-                }
+                const ionAlert = await alertController.create({
+                  message: 'What are you going to do?',
+                  buttons: [
+                    {
+                      text: 'Create File',
+                      handler: () => {
+                        const fileName = prompt('Creating a new file');
+                        const rootPath = `${this.fileTree.path}/`;
+                        const filePath = `${detail.path?.slice(rootPath.length)}/${fileName}`;
+                        if (filePath !== null) {
+                          this.createFile(filePath, '');
+                        }
+                      },
+                    },
+                    {
+                      text: 'Upload File',
+                      handler: async () => {
+                        const input = document.createElement('input');
+                        input.type = 'file';
+                        input.onchange = async () => {
+                          const file = input.files[0];
+                          const formData = new FormData();
+                          formData.append('file', file);
+                          const rootPath = `${this.fileTree.path}/`;
+                          const filePath = `${detail.path?.slice(rootPath.length)}`;
+                          const response = await fetch(`${Env.SERVER_BASE_URL}/file/upload?path=${filePath}`, { method: 'POST', body: formData });
+                          if (response.ok) {
+                            alert('Uploaded.');
+                            this.fetchFileTree();
+                          } else {
+                            alert('Fail to upload.');
+                          }
+                        };
+                        input.click();
+                      },
+                    },
+                    { text: 'Cancel', role: 'cancel' },
+                  ],
+                });
+                await ionAlert.present();
               } else {
                 if (confirm(`Delete ${detail.name}?`)) {
                   const rootPath = `${this.fileTree.path}/`;
