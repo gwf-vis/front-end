@@ -1,9 +1,10 @@
 import { Component, ComponentInterface, Env, h, Host, State } from '@stencil/core';
-import '@seanwong24/s-monaco-editor';
+import '@hey-web-components/monaco-editor';
 import { TreeNode } from '../app-tree-view/app-tree-view';
 import defaultPythonScript from './default_python_script.txt';
 import { obtainDbInfo } from './obtain-db-info';
 import { alertController } from '@ionic/core';
+import { HeyMonacoEditor } from '@hey-web-components/monaco-editor';
 
 export interface User {
   username: string;
@@ -22,7 +23,7 @@ export class AppHome implements ComponentInterface {
     json: 'json',
   };
 
-  private monacoEditorElement: HTMLSMonacoEditorElement;
+  private monacoEditorElement: HeyMonacoEditor;
 
   @State() fileTree: TreeNode;
   @State() user: User;
@@ -139,7 +140,7 @@ export class AppHome implements ComponentInterface {
                       </ion-toolbar>
                       {/* TODO considering using flex or resize observer for the height */}
                       <ion-card-content style={{ height: 'calc(100% - 56px)' }}>
-                        <s-monaco-editor ref={(el: HTMLSMonacoEditorElement) => (this.monacoEditorElement = el)} />
+                        <hey-monaco-editor ref={(el: HeyMonacoEditor) => (this.monacoEditorElement = el)} />
                       </ion-card-content>
                     </ion-card>
                   </ion-col>
