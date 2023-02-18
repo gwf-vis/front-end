@@ -2,7 +2,7 @@
 FROM node as build-stage
 WORKDIR /app
 COPY package*.json /app/
-RUN npm i
+RUN npm ci
 COPY . /app
 RUN npm run build
 
