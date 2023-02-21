@@ -24,7 +24,7 @@
     "puppeteer": "^10.0.0"
   },
   "dependencies": {
-    "@hey-web-components/monaco-editor": "^0.1.0-pre9",
+    "@hey-web-components/monaco-editor": "^0.1.1",
     "@ionic/core": "^6.0.0",
     "gwf-vis-host": "github:river-flow-vis/gwf-vis-host#6d3121c174a568c0afb42b288f8b974b760d026d"
   }
