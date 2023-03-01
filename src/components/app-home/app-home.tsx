@@ -5,6 +5,11 @@ import defaultPythonScript from './default_python_script.txt';
 import { obtainDbInfo } from './obtain-db-info';
 import { alertController } from '@ionic/core';
 import { HeyMonacoEditor } from '@hey-web-components/monaco-editor';
+import polygonLayerSnippet from './snippets/polygon-layer-snippet.txt';
+import variableAndDimensionControlSnippet from './snippets/variable-and-dimension-control-snippet.txt';
+import userSelectionSnippet from './snippets/user-selection-snippet.txt';
+import metadataSnippet from './snippets/metadata-snippet.txt';
+import lineChartSnippet from './snippets/line-chart-snippet.txt';
 
 export interface User {
   username: string;
@@ -140,7 +145,32 @@ export class AppHome implements ComponentInterface {
                       </ion-toolbar>
                       {/* TODO considering using flex or resize observer for the height */}
                       <ion-card-content style={{ height: 'calc(100% - 56px)' }}>
-                        <hey-monaco-editor ref={(el: HeyMonacoEditor) => (this.monacoEditorElement = el)} />
+                        <hey-monaco-editor
+                          ref={(el: HeyMonacoEditor) => {
+                            this.monacoEditorElement = el;
+                            this.monacoEditorElement.addEventListener('editorInitialized', ({ detail }: CustomEvent) => {
+                              const monaco = detail?.monaco;
+                              monaco.languages.registerCompletionItemProvider('python', {
+                                provideCompletionItems: function () {
+                                  return {
+                                    suggestions: [
+                                      { label: 'gwfvis - add polygon layer', insertText: polygonLayerSnippet },
+                                      { label: 'gwfvis - add variable and dimension control', insertText: variableAndDimensionControlSnippet },
+                                      { label: 'gwfvis - add user selection', insertText: userSelectionSnippet },
+                                      { label: 'gwfvis - add metadata', insertText: metadataSnippet },
+                                      { label: 'gwfvis - add line chart', insertText: lineChartSnippet },
+                                    ].map(value => ({
+                                      kind: monaco.languages.CompletionItemKind.Function,
+                                      documentation: 'Add a polygon layer',
+                                      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                                      ...value,
+                                    })),
+                                  };
+                                },
+                              });
+                            });
+                          }}
+                        />
                       </ion-card-content>
                     </ion-card>
                   </ion-col>
